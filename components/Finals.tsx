@@ -64,7 +64,7 @@ export function Finals() {
             <h2 id="finales-title" className="h-display text-[58px] md:text-[96px]">
               {finals.length} finales.
               <br />
-              <span className="text-gold">{titles === 4 ? "Cuatro" : titles} estrellas.</span>
+              <span className="text-gold">{titles === 4 ? "Cuatro" : titles} títulos.</span>
             </h2>
           </div>
           <p className="max-w-[420px] font-serif text-2xl italic leading-tight text-bone/75 md:text-[30px]">Primero el sufrimiento. Después, la gloria.</p>
