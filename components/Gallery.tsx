@@ -27,7 +27,7 @@ function Item({ it }: { it: GalleryItem }) {
         </div>
       </div>
       <figcaption className="font-mono text-[10px] text-bone/55 md:text-[11px]">
-        {it.year} · {it.opponent} · {it.image ? `${it.image.credit} · ${it.image.license}` : "[Autor] · CC BY-SA 4.0"}
+        {it.year} · {it.opponent}{it.image ? ` · ${it.image.credit} · ${it.image.license}` : ""}
       </figcaption>
     </figure>
   );

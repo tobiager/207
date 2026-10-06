@@ -51,7 +51,7 @@ export function Hero() {
     <section ref={root} id="top" className="relative flex min-h-[100svh] flex-col overflow-hidden">
       {/* Foto duotono de fondo */}
       <div className="hero-photo-wrap absolute inset-0 -z-0">
-        <div className="hero-photo absolute inset-0">
+        <div className="hero-photo absolute inset-0 md:left-[44%] md:[mask-image:linear-gradient(to_right,transparent,#000_24%)]">
           <Photo image={heroImage} alt="Messi con la camiseta de la Selección" credit="none" priority sizes="100vw" className="h-full" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-night via-night/40 to-night/70" />
@@ -68,8 +68,8 @@ export function Hero() {
       </header>
 
       <div className="px-gutter relative z-10 mt-auto pb-8 md:pb-14">
-        <span className="hero-fade mb-4 block font-mono text-[10px] text-bone/50 md:text-[11px]">
-          {heroImage ? `Foto: ${heroImage.credit} · ${heroImage.license}` : "Foto: [Autor] · Wikimedia Commons · CC BY-SA 4.0"}
+        <span className="hero-fade mb-8 block font-mono text-[10px] text-bone/30 md:mb-12 md:text-[11px]">
+          {heroImage ? `Foto: ${heroImage.credit} · ${heroImage.license}` : ""}
         </span>
         <h1
           className="hero-207 relative isolate font-display font-black leading-[0.78] tracking-[-0.02em] text-bone"
@@ -84,7 +84,8 @@ export function Hero() {
           ))}
         </h1>
         <div className="mt-6 flex flex-wrap items-end justify-between gap-8 md:mt-9">
-          <p className="hero-fade font-serif text-[34px] italic leading-[1.05] md:text-[clamp(32px,3.4vw,52px)]">
+          {/* Sin hero-fade: es el candidato a LCP en mobile, no debe arrancar en opacity 0. */}
+          <p className="font-serif text-[34px] italic leading-[1.05] md:text-[clamp(32px,3.4vw,52px)]">
             Una carrera entera.
             <br />
             Un solo gráfico.

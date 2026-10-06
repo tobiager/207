@@ -40,10 +40,21 @@ export function shouldPlayIntro() {
   return w.__207intro;
 }
 
+function drawCounter(cv: HTMLCanvasElement | null, v: number) {
+  const ctx = cv?.getContext("2d");
+  if (!cv || !ctx) return;
+  const family = getComputedStyle(document.body).getPropertyValue("--font-jetbrains-mono") || "monospace";
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.font = `500 128px ${family}, ui-monospace, monospace`;
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#F4F1EA";
+  ctx.fillText(String(v).padStart(3, "0"), cv.width / 2, 108);
+}
+
 /** Pantalla negra, contador mono 000 → 207 que acelera y se rompe en 207 cuadraditos. */
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
-  const counter = useRef<HTMLSpanElement>(null);
+  const counter = useRef<HTMLCanvasElement>(null);
   const shards = useRef<HTMLDivElement>(null);
   const [gone, setGone] = useState(false);
   const { lenis } = useStore();
@@ -54,6 +65,7 @@ export function Preloader() {
       signalReady();
       return;
     }
+    drawCounter(counter.current, 0);
     document.documentElement.style.overflow = "hidden";
     lenis.current?.stop();
     window.scrollTo(0, 0);
@@ -75,7 +87,7 @@ export function Preloader() {
         duration: 2.1,
         ease: "expo.in",
         onUpdate: () => {
-          if (counter.current) counter.current.dataset.v = String(Math.round(state.v)).padStart(3, "0");
+          drawCounter(counter.current, Math.round(state.v));
         },
       })
         .to(".pl-bar", { scaleX: 1, duration: 2.1, ease: "expo.in" }, 0)
@@ -109,8 +121,8 @@ export function Preloader() {
   return (
     <div ref={root} className="fixed inset-0 z-[95] flex items-center justify-center bg-black" aria-hidden="true">
       <div className="relative flex flex-col items-center gap-6">
-        {/* Texto generado por CSS (data-v): no es candidato a LCP, así el LCP lo toma el hero. */}
-        <span ref={counter} data-v="000" className="pl-counter font-mono text-[22vw] font-medium tabular-nums leading-none tracking-[0.04em] text-bone md:text-[120px]" />
+        {/* Canvas (no es candidato a LCP): así el LCP lo toma el hero. El número se dibuja en JS. */}
+        <canvas ref={counter} width={380} height={128} className="h-auto w-[65vw] md:w-[360px]" aria-hidden="true" />
         <div
           ref={shards}
           className="pointer-events-none absolute left-1/2 top-1/2 grid -translate-x-1/2 -translate-y-1/2 gap-[3px]"

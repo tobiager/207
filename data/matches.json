@@ -1500,7 +1500,11 @@
     "isFinal": true,
     "won": false,
     "note": "Final de la Copa América 2016. Subcampeón.",
-    "image": null,
+    "image": {
+      "src": "/img/x-tv.webp",
+      "credit": "Captura de TV (Sportia / Univisión)",
+      "license": "Sin licencia libre"
+    },
     "verified": true
   },
   {
@@ -2282,7 +2286,12 @@
     "isFinal": true,
     "won": true,
     "note": "Final del Mundial 2022. Campeón.",
-    "image": null,
+    "image": {
+      "src": "/img/x-champ.webp",
+      "credit": "Sebas · Wikimedia Commons",
+      "license": "CC BY 3.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Argentina_3-3_Francia_-_Copa_Mundial_2022_-_Argentina_campe%C3%B3n.jpg"
+    },
     "verified": true
   },
   {
@@ -2451,7 +2460,12 @@
     "isFinal": false,
     "won": true,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/x-sorteo.webp",
+      "credit": "Sebas · Wikimedia Commons",
+      "license": "CC BY 3.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Argentina_1-1_Ecuador_-_Copa_Am%C3%A9rica_2024_-_Sorteo_de_capitanes.jpg"
+    },
     "verified": true
   },
   {

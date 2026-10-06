@@ -114,7 +114,7 @@ export function Chapters() {
                   Capítulo {String(i + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")} · {c.title}
                 </span>
                 <span className="absolute right-4 top-4 hidden font-mono text-[10px] text-bone/55 md:right-9 md:top-7 md:block">
-                  {chapterImages[c.year] ? `${chapterImages[c.year]!.credit} · ${chapterImages[c.year]!.license}` : "Foto: [Autor] · CC BY-SA 4.0"}
+                  {chapterImages[c.year] ? `${chapterImages[c.year]!.credit} · ${chapterImages[c.year]!.license}` : ""}
                 </span>
                 <div className="absolute inset-x-4 bottom-5 flex flex-wrap items-end justify-between gap-6 md:inset-x-9 md:bottom-9 md:gap-8">
                   <div className="flex flex-col gap-3 overflow-hidden">

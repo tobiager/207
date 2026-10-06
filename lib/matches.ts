@@ -88,6 +88,13 @@ export const chapters: Chapter[] = [
     pick: (m) => m.n === 1,
   },
   {
+    year: 2014,
+    title: "Maracaná",
+    line: "A metros de la copa. La vio de lejos.",
+    tag: "Mundial Brasil 2014",
+    pick: (m) => yearOf(m) === 2014 && m.competition === "Mundial",
+  },
+  {
     year: 2016,
     title: "La renuncia",
     line: "«Se terminó para mí la Selección.» Un país entero le pidió que no.",

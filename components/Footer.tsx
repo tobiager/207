@@ -34,12 +34,12 @@ export function Footer() {
 
   return (
     <footer ref={root} className="px-gutter relative flex flex-col gap-14 border-t border-bone/10 pb-10 pt-20 md:gap-20 md:pb-12 md:pt-28">
-      <div className="flex flex-col gap-2 break-all font-mono text-xs md:text-lg" aria-label={`$ ${CMD} → ${TOTAL_MATCHES}`}>
-        <span>
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[10px] sm:gap-x-5 sm:text-sm md:text-lg" aria-label={`$ ${CMD} → ${TOTAL_MATCHES}`}>
+        <span className="whitespace-nowrap">
           <span className="text-celeste">$</span> <span className="term-cmd">{CMD}</span>
         </span>
-        <span className="term-out text-celeste">
-          {TOTAL_MATCHES}
+        <span className="term-out whitespace-nowrap text-celeste">
+          → {TOTAL_MATCHES}
           <span className="caret ml-1.5 inline-block h-[1.1em] w-2.5 translate-y-[3px] bg-bone align-baseline" />
         </span>
       </div>

@@ -7,7 +7,7 @@ import { TITLES, TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 import { site } from "@/config/site";
 import { useStore } from "@/lib/store";
 import { shareLinks, shareText } from "@/lib/share";
-import { LinkIcon, WhatsAppIcon, XIcon, LinkedInIcon } from "./icons";
+import { LinkIcon, WhatsAppIcon, XIcon } from "./icons";
 import { Magnetic } from "./Magnetic";
 
 const CLOTHS = [
@@ -117,11 +117,6 @@ export function Outro() {
         <Magnetic className="w-full md:w-auto">
           <a className={btn} href={links.x} target="_blank" rel="noreferrer">
             <XIcon /> X
-          </a>
-        </Magnetic>
-        <Magnetic className="w-full md:w-auto">
-          <a className={btn} href={links.linkedin} target="_blank" rel="noreferrer">
-            <LinkedInIcon size={15} /> LinkedIn
           </a>
         </Magnetic>
         <Magnetic className="w-full md:w-auto">

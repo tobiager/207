@@ -240,7 +240,7 @@ export function MatchExplorer() {
             const open = active === m.n;
             const gold = m.isFinal && m.won;
             return (
-              <li key={m.n} id={`partido-${m.n}`} className={`[contain-intrinsic-size:auto_68px] [content-visibility:auto] border-b ${open ? "border-celeste/40" : "border-bone/[0.07]"}`}>
+              <li key={m.n} id={`partido-${m.n}`} className={`border-b ${open ? "border-celeste/40" : "border-bone/[0.07] [contain-intrinsic-size:auto_79px] [content-visibility:auto] md:[contain-intrinsic-size:auto_63px]"}`}>
                 <button
                   type="button"
                   aria-expanded={open}
