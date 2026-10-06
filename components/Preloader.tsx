@@ -94,6 +94,8 @@ export function Preloader() {
           stagger: { amount: 0.35, from: "center", grid: [9, COLS] },
         })
         .to(root.current, { backgroundColor: "rgba(0,0,0,0)", duration: 1.1, ease: "power2.inOut" }, "<");
+      // Mobile: mismo efecto comprimido a < 1 s (la intro completa dura ~4.4 s) para no demorar el LCP.
+      if (window.matchMedia("(max-width: 767px)").matches) tl.timeScale(5);
     }, root);
 
     return () => {

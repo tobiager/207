@@ -1,82 +1,53 @@
 # 207 — Gracias, Leo
 
-Homenaje one-page a Lionel Messi por su despedida de la Selección Argentina.
-La carrera entera contada como un *contribution graph* de GitHub: 207 cuadraditos, uno por partido.
+<!-- Reemplazá esta línea por el GIF de demo: ![demo](docs/demo.gif) -->
+![demo](docs/demo.gif)
 
-**Stack:** Next.js 15 (App Router) · TypeScript · Tailwind v4 · GSAP (ScrollTrigger, SplitText) · Lenis · next/og
+Homenaje one-page a Lionel Messi por su carrera en la Selección Argentina: **207 partidos, 125 goles**, contados como un *contribution graph* de GitHub (un cuadradito por partido, 2005 → 2026). El partido 208 (Argentina vs Benín, 06/10/2026, Monumental) cambia de estado según la hora: cuenta regresiva → en vivo → finalizado.
+
+> Homenaje no oficial hecho por un hincha. No está afiliado ni respaldado por Lionel Messi, la AFA ni la FIFA.
+
+## Stack
+
+Next.js 15 (App Router) · TypeScript · Tailwind CSS v4 · GSAP (ScrollTrigger, SplitText) · Lenis · `next/og`
+
+## Cómo correrlo
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
+npm run dev          # http://localhost:3000
 npm run build && npm start
+npm run lint
 ```
+
+Variable opcional: `NEXT_PUBLIC_SITE_URL=https://207.vercel.app` (metadataBase, OG y links de compartir).
 
 ## Dónde editar
 
 | Qué | Archivo |
 | --- | --- |
-| Links del footer (GitHub, LinkedIn, Portfolio, repo), URL pública, horario del partido 208, resultado final | `config/site.ts` |
+| Links del footer, URL pública, horario del partido 208, `finalScore` | `config/site.ts` |
 | Los 207 partidos | `data/matches.json` |
-| Fotos de la galería, hero y capítulos | `data/gallery.ts` |
-| Textos de los capítulos | `lib/matches.ts` → `chapters` |
-| Embeds oficiales de Instagram / X | `config/site.ts` → `embeds` |
+| Fotos (autor, licencia, origen), galería, hero y capítulos | `data/gallery.ts` |
+| Textos de los capítulos | `lib/matches.ts` |
 
-Variable de entorno opcional: `NEXT_PUBLIC_SITE_URL=https://tu-dominio.com` (OG y links de compartir).
+Al terminar el partido 208 completá `finalScore` en `config/site.ts` (ej. `"3-0"`) para mostrar el resultado en el hero, el countdown y el cuadradito 208.
 
-### ⚠️ Datos
+Rutas: `/` · `/p/[n]` (deep link a un partido) · `/story?m=176` (story vertical) · `/creditos` · `/?estado=live` y `/?estado=after` para previsualizar estados · `/?intro=0` saltea el preloader.
 
-`data/matches.json` tiene **datos placeholder realistas**: los hitos (debut, finales, Copa América 2021 y 2024, Qatar 2022, final 2026 vs España) usan resultados reales, pero el resto de fechas, rivales y goles por partido se generaron con `scripts/gen_matches.py` respetando los totales (207 partidos, 125 goles). **Reemplazalos con datos verificados antes de publicar.** Esquema:
+## Fuentes de datos
 
-```json
-{ "n": 1, "date": "2005-08-17", "opponent": "Hungría", "result": "2-1", "goals": 0,
-  "competition": "Amistoso", "isFinal": false, "won": true, "note": "Debut…",
-  "image": { "src": "/img/ejemplo.jpg", "credit": "Autor", "license": "CC BY 4.0", "href": "https://commons.wikimedia.org/…" } }
-```
+Los 207 partidos (fecha, rival, resultado, goles, competencia) se armaron cruzando:
 
-`image` y `note` son opcionales (`null`). `competition`: `Mundial` · `Copa América` · `Eliminatorias` · `Amistoso` · `Finalissima`.
+- [worldfootball.net](https://www.worldfootball.net/person/pe1757/lionel-messi/international-matches/): apariciones de Messi con la Selección, partido por partido.
+- Wikipedia: [List of international goals scored by Lionel Messi](https://en.wikipedia.org/wiki/List_of_international_goals_scored_by_Lionel_Messi) (número de cap, fecha local, goles) y *Argentina national football team results* (resultados, penales, fechas locales).
 
-### Fotos
+Validación: 207 partidos y 125 goles; el número de cap y los goles de cada uno de los 86 partidos con gol coinciden entre ambas fuentes. Cada partido tiene `"verified"` en el JSON (`false` = no se pudo cruzar con dos fuentes). Las fechas son locales del estadio.
 
-Sólo licencia libre (Wikimedia Commons, CC BY / CC BY-SA) con crédito visible. Guardalas en `public/img/` o usá URLs de `upload.wikimedia.org` (ya habilitado en `next.config.ts`). Todas reciben automáticamente el duotono `#07111F → #75AADB` + grano; en la galería recuperan el color al hover/tap. Mientras no haya foto se ve un placeholder con el mismo tratamiento.
+## Créditos de fotos
 
-## Rutas
+Todas las fotos son de Wikimedia Commons con licencias CC BY o CC BY-SA, con crédito visible en el sitio. Autores, licencias y links de origen: [`/creditos`](https://207.vercel.app/creditos) y `data/gallery.ts`.
 
-- `/` — el sitio
-- `/p/[n]` — deep link a un partido (abre su fila en el explorador). OG propio en `/p/[n]/opengraph-image`
-- `/opengraph-image` — OG 1200×630
-- `/story?m=176` — story vertical 1080×1920 (sin `m` es la versión general)
-- `/?estado=live` · `/?estado=after` — previsualizar los estados del countdown y del partido 208
-- `/?intro=0` — saltear el preloader (también se saltea en visitas repetidas de la sesión y en `/p/n`)
+## Licencia
 
-## Arquitectura
-
-```
-app/            layout (fuentes self-hosted), page, /p/[n], OG images, /story
-components/     Preloader, Hero, Countdown, Manifesto, MatchGrid, MatchExplorer, Chapters,
-                Gallery, Finals, Match208, Outro, Footer + Cursor, Magnetic, Photo, SmoothScroll, Atmosphere
-lib/            matches (tipos + derivados), gsap, store (filtro → resaltado del grid), useLazyGSAP, share, og
-config/site.ts  todo lo editable
-```
-
-- **Lenis + ScrollTrigger** sincronizados (`lenis.on('scroll', ScrollTrigger.update)` + `gsap.ticker`).
-- **Grid**: CSS grid con variables por celda; desktop columnas por año, mobile filas por año. El pintado se hace con una sola variable CSS `--p` (no 207 tweens).
-- **useLazyGSAP**: cada sección arma sus animaciones en su propia tarea, en orden de documento, y se hace un único `ScrollTrigger.refresh()`. Bajó el Total Blocking Time de ~3 s a ~0.5 s (mobile throttled).
-- **prefers-reduced-motion**: sin preloader, sin pins, todo visible; los capítulos se scrollean horizontalmente a mano.
-
-## Lighthouse (local, `next start`)
-
-| | Perf | A11y | Best Practices | SEO |
-| --- | --- | --- | --- | --- |
-| Desktop | 99 | 96 | 100 | 100 |
-| Mobile (con preloader) | ~68 | 96 | 96 | 100 |
-| Mobile (`?intro=0` / visita repetida) | ~78 | 96 | 96 | 100 |
-
-En mobile el preloader obligatorio de ~3 s retrasa LCP y Speed Index. Si querés 90+ en mobile: saltear el preloader en mobile o acortarlo, e hidratar de forma diferida las secciones de abajo del fold.
-
-## Deploy
-
-Vercel, sin configuración extra. Las fuentes (OFL) están en `app/fonts` y `assets/og-fonts`.
-
----
-
-Homenaje no oficial hecho por un hincha. Sin escudos ni logos de marcas.
+Código bajo [licencia MIT](LICENSE). Las fotos conservan sus propias licencias Creative Commons.
