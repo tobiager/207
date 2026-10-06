@@ -40,6 +40,8 @@ export const photos: Photo[] = [
   { n: 185, file: "/img/x-sorteo.webp", title: "Argentina 1-1 Ecuador - Copa América 2024 - Sorteo de capitanes.jpg", author: "Sebas", license: "CC BY 3.0", licenseUrl: "https://creativecommons.org/licenses/by/3.0/", source: "https://commons.wikimedia.org/wiki/File:Argentina_1-1_Ecuador_-_Copa_Am%C3%A9rica_2024_-_Sorteo_de_capitanes.jpg", ratio: 0.56 },
   { n: null, file: "/img/x-tears.webp", title: "Lionel Messi in tears after the final.jpg", author: "Agência Brasil", license: "CC BY 3.0 br", licenseUrl: "https://creativecommons.org/licenses/by/3.0/br/deed.en/", source: "https://commons.wikimedia.org/wiki/File:Lionel_Messi_in_tears_after_the_final.jpg", ratio: 0.63, gallery: false, label: "Mundial 2014, final" },
   { n: null, file: "/img/x-tv.webp", title: "Captura de TV (Sportia / Univisión)", author: "Captura de TV (Sportia / Univisión)", license: "Sin licencia libre", licenseUrl: "", source: "", ratio: 0.56, gallery: false, label: "Copa América Centenario 2016, tras la final" },
+  { n: null, file: "/img/x-2005.webp", title: "Leo messi barce 2005.jpg", author: "Josep Tomàs", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/", source: "https://commons.wikimedia.org/wiki/File:Leo_messi_barce_2005.jpg", ratio: 0.67, gallery: false, label: "Messi en 2005, el año de su debut (con el Barcelona)" },
+  { n: null, file: "/img/x-maracana.webp", title: "Maracanã 2014 e.jpg", author: "Daniel Basil", license: "CC BY 3.0 br", licenseUrl: "https://creativecommons.org/licenses/by/3.0/br/deed.en/", source: "https://commons.wikimedia.org/wiki/File:Maracan%C3%A3_2014_e.jpg", ratio: 0.67, gallery: false, label: "Estadio Maracaná (capítulo 2021)" },
 ];
 
 export const toImage = (p: Photo): MatchImage => ({
@@ -73,10 +75,10 @@ export const gallery: GalleryItem[] = photos
 /** Fotos de fondo del hero y de los capítulos (mismo formato). */
 export const heroImage: MatchImage | null = byFile("m204");
 export const chapterImages: Record<number, MatchImage | null> = {
-  2005: null,
+  2005: byFile("x-2005"),
   2014: byFile("x-tears"),
   2016: byFile("x-tv"),
-  2021: null,
+  2021: byFile("x-maracana"),
   2022: byFile("x-champ"),
   2024: byFile("x-sorteo"),
   2026: byFile("m207"),
