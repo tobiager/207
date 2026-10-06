@@ -1,7 +1,10 @@
-# 207 — Gracias, Leo
 
-<!-- Reemplazá esta línea por el GIF de demo: ![demo](docs/demo.gif) -->
-![demo](docs/demo.gif)
+<div align="center">
+
+<img src="public/207.png" width="100" alt="207">
+
+<h1 align="center"> 207 — Gracias, Leo</h1>
+</div>
 
 Homenaje one-page a Lionel Messi por su carrera en la Selección Argentina: **207 partidos, 125 goles**, contados como un *contribution graph* de GitHub (un cuadradito por partido, 2005 → 2026). El partido 208 (Argentina vs Benín, 06/10/2026, Monumental) cambia de estado según la hora: cuenta regresiva → en vivo → finalizado.
 
