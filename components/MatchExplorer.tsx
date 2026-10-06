@@ -39,6 +39,32 @@ function outcome(m: Match) {
   return `Derrota ante ${m.opponent}. También son parte.`;
 }
 
+/** Tarjeta tipográfica para los partidos sin foto. */
+function ScoreCard({ m, gold }: { m: Match; gold: boolean }) {
+  const [score, ...rest] = m.result.split(" ");
+  return (
+    <div
+      className={`flex h-full flex-col justify-between rounded border p-5 md:p-6 ${
+        gold ? "border-gold/40 bg-[radial-gradient(circle_at_20%_30%,rgb(201_164_76/0.18),transparent_65%)]" : "border-bone/10 bg-[radial-gradient(circle_at_20%_30%,rgb(117_170_219/0.12),transparent_65%)]"
+      }`}
+    >
+      <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-bone/55 md:text-[11px]">
+        {m.competition} · {formatDate(m.date)}
+      </span>
+      <div className="flex flex-col gap-1">
+        <span className={`font-display font-black leading-[0.85] tabular-nums ${gold ? "text-gold" : "text-bone"}`} style={{ fontSize: "clamp(64px, 9vw, 112px)" }}>
+          {score}
+          {rest.length > 0 && <span className="ml-3 align-middle font-mono text-sm font-normal text-bone/55">{rest.join(" ")}</span>}
+        </span>
+        <span className="font-display text-xl font-bold uppercase tracking-[0.01em] text-bone/80 md:text-2xl">ARG vs {m.opponent}</span>
+      </div>
+      <span className={`self-end font-mono text-[11px] ${gold ? "text-gold/80" : "text-celeste/80"}`}>
+        #{m.n}/207
+      </span>
+    </div>
+  );
+}
+
 function Detail({ m }: { m: Match }) {
   const { setHighlight, setActive, scrollTo } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
@@ -46,7 +72,11 @@ function Detail({ m }: { m: Match }) {
   return (
     <div className={`grid gap-6 pb-8 pt-2 md:grid-cols-[minmax(0,420px)_1fr] md:gap-10 md:pl-[86px] ${tone === "gold" ? "bg-gold/[0.04]" : ""}`}>
       <div className="aspect-[16/10]">
-        <Photo image={m.image} alt={`Argentina vs ${m.opponent}, ${formatDate(m.date)}`} sizes="(min-width: 768px) 420px, 100vw" className="rounded" />
+        {m.image ? (
+          <Photo image={m.image} alt={`Argentina vs ${m.opponent}, ${formatDate(m.date)}`} sizes="(min-width: 768px) 420px, 100vw" className="rounded" />
+        ) : (
+          <ScoreCard m={m} gold={tone === "gold"} />
+        )}
       </div>
       <div className="flex flex-col gap-4">
         <p className="font-serif text-[28px] italic leading-tight md:text-[34px]">

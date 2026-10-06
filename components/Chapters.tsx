@@ -120,7 +120,7 @@ export function Chapters() {
                   <div className="flex flex-col gap-3 overflow-hidden">
                     <span
                       className={`ch-reveal block font-display font-black leading-[0.76] tracking-[-0.02em] ${c.gold ? "text-gold" : "text-bone"}`}
-                      style={{ fontSize: "clamp(130px, 21vw, 320px)" }}
+                      style={{ fontSize: "clamp(130px, 21vw, 320px)", paddingTop: "0.1em" }}
                     >
                       {c.year}
                     </span>
