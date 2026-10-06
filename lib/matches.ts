@@ -19,6 +19,8 @@ export type Match = {
   isFinal: boolean;
   won: boolean;
   note?: string | null;
+  /** false = no se pudo cruzar con al menos dos fuentes. */
+  verified?: boolean;
   image?: MatchImage | null;
 };
 
