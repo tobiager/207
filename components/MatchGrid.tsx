@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState, type CSSProperties } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
 import { useStore } from "@/lib/store";
 import { cells, cumulativeGoals, formatDate, MAX_ROWS, TOTAL_GOALS, TOTAL_MATCHES, YEARS, yearOf, type Cell } from "@/lib/matches";

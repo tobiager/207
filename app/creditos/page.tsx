@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function Creditos() {
   return (
-    <main className="px-gutter mx-auto flex min-h-screen max-w-[1100px] flex-col gap-10 py-16 md:py-24">
-      <header className="flex flex-col gap-4">
+    <main className="px-gutter mx-auto flex w-full min-h-screen max-w-[1100px] flex-col gap-10 py-16 md:py-24">
+      <header className="flex min-w-0 flex-col gap-4">
         <Link href="/" className="font-mono text-xs text-celeste hover:underline">
           ← 207
         </Link>
@@ -27,7 +27,7 @@ export default function Creditos() {
         {photos.map((p) => {
           const m = matches.find((x) => x.n === p.n)!;
           return (
-            <li key={p.n} className="grid grid-cols-[96px_1fr] items-start gap-4 py-5 md:grid-cols-[160px_1fr]">
+            <li key={p.n} className="grid grid-cols-[96px_minmax(0,1fr)] items-start gap-4 py-5 md:grid-cols-[160px_minmax(0,1fr)]">
               <Image src={p.file} alt={`Messi vs ${m.opponent}, ${formatDate(m.date)}`} width={320} height={Math.round(320 * p.ratio)} className="h-auto w-full rounded" />
               <div className="flex flex-col gap-1.5 font-mono text-[12px] leading-relaxed text-bone/70 md:text-sm">
                 <span className="text-bone">
