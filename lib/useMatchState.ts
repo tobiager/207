@@ -6,7 +6,7 @@ import { site } from "@/config/site";
 export type MatchPhase = "before" | "live" | "after";
 
 const KICKOFF = new Date(site.match208.kickoff).getTime();
-const END = KICKOFF + site.match208.durationMin * 60_000;
+const END = new Date(site.match208.end).getTime();
 
 function phaseAt(t: number): MatchPhase {
   if (t < KICKOFF) return "before";

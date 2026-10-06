@@ -23,10 +23,10 @@ export const site = {
     opponent: "Benín",
     venue: "Monumental",
     kickoff: "2026-10-06T20:00:00-03:00",
-    /** Duración estimada hasta considerar el partido terminado (minutos). */
-    durationMin: 115,
-    /** Completar al terminar: ej. { score: "3-0", goals: 1 } */
-    result: null as null | { score: string; goals: number },
+    /** Desde esta hora se muestra "partido finalizado" (horario fijo de Argentina). */
+    end: "2026-10-06T23:00:00-03:00",
+    /** Opcional. Completar al terminar, ej. "3-0" (goles de Argentina primero). */
+    finalScore: undefined as string | undefined,
   },
 
   /**

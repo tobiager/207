@@ -1,10 +1,12 @@
 "use client";
 
+import { site } from "@/config/site";
 import { useMatchState } from "@/lib/useMatchState";
 
-/** Cuenta regresiva a las 20:00 con 3 estados: antes / en vivo / final. */
+/** Estados según la hora fija de Argentina: antes (cuenta regresiva) / en vivo / finalizado. */
 export function Countdown({ variant = "pill" }: { variant?: "pill" | "big" }) {
   const { phase, remaining } = useMatchState();
+  const score = site.match208.finalScore;
 
   if (variant === "pill") {
     return (
@@ -18,7 +20,11 @@ export function Countdown({ variant = "pill" }: { variant?: "pill" | "big" }) {
             <span>en vivo</span>
           </>
         ) : phase === "after" ? (
-          <span className="font-serif text-[15px] normal-case italic tracking-normal">Gracias, Leo</span>
+          <>
+            <span>partido finalizado</span>
+            {score && <b className="font-medium tabular-nums text-celeste">ARG {score} BEN</b>}
+            <span className="hidden font-serif text-[15px] normal-case italic tracking-normal md:inline">· Gracias, Leo</span>
+          </>
         ) : (
           <>
             <span className="h-1.5 w-1.5 rounded-full bg-celeste" />
@@ -43,7 +49,9 @@ export function Countdown({ variant = "pill" }: { variant?: "pill" | "big" }) {
         </>
       ) : phase === "after" ? (
         <>
-          <span className="text-[11px] uppercase tracking-[0.14em] text-bone/60">Monumental · final</span>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-bone/60">
+            Monumental · partido finalizado{score ? ` · ARG ${score} BEN` : ""}
+          </span>
           <span className="font-serif text-4xl italic md:text-5xl">Gracias, Leo</span>
         </>
       ) : (

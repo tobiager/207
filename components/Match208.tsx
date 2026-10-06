@@ -7,7 +7,7 @@ import { useMatchState } from "@/lib/useMatchState";
 export function Match208() {
   const { phase, remaining } = useMatchState();
   const m = site.match208;
-  const result = m.result;
+  const score = m.finalScore;
 
   return (
     <section id="partido-208" className="px-gutter relative flex flex-col items-center gap-10 border-t border-bone/[0.06] py-28 text-center md:gap-14 md:py-44" aria-labelledby="p208-title">
@@ -16,7 +16,10 @@ export function Match208() {
 
       {phase === "after" ? (
         <div className="flex h-36 w-36 items-center justify-center rounded-2xl bg-celeste font-display text-6xl font-black text-night shadow-[0_0_100px_rgb(117_170_219/0.7)] md:h-[220px] md:w-[220px] md:text-[84px]">
-          208
+          <span className="flex flex-col items-center leading-none">
+            208
+            {score && <span className="mt-2 text-[22px] tracking-wide md:text-[34px]">{score}</span>}
+          </span>
         </div>
       ) : phase === "live" ? (
         <div className="heartbeat heartbeat-fast h-36 w-36 rounded-2xl border-2 border-celeste bg-celeste/30 shadow-[0_0_80px_rgb(117_170_219/0.45)] md:h-[220px] md:w-[220px]" aria-hidden="true" />
@@ -31,11 +34,11 @@ export function Match208() {
           </span>
         )}
         <h2 id="p208-title" className="h-display text-[46px] md:text-[84px]">
-          {phase === "after" && result ? `ARG ${result.score} BEN` : <>Argentina vs {m.opponent}</>}
+          {phase === "after" && score ? `ARG ${score} BEN` : <>Argentina vs {m.opponent}</>}
         </h2>
         <span className="text-[11px] tracking-[0.16em] text-bone/65 md:text-sm">
           {phase === "after"
-            ? `${result ? `${result.goals} gol${result.goals === 1 ? "" : "es"} de Leo · ` : ""}06.10.2026 · ${m.venue.toUpperCase()}`
+            ? `PARTIDO FINALIZADO · 06.10.2026 · ${m.venue.toUpperCase()}`
             : `${m.venue.toUpperCase()} · HOY 20:00${phase === "before" && remaining ? ` · faltan ${remaining}` : ""}`}
         </span>
         <p className="mt-2 font-serif text-2xl italic text-bone/75 md:text-[32px]">
