@@ -74,7 +74,7 @@ export function Hero() {
         <h1
           className="hero-207 relative isolate font-display font-black leading-[0.78] tracking-[-0.02em] text-bone"
           style={{ fontSize: "clamp(220px, 46vw, 680px)" }}
-          aria-label="207"
+          aria-label="207 partidos de Lionel Messi con la Selección Argentina"
         >
           <span aria-hidden="true" className="pointer-events-none absolute -inset-x-[10%] -inset-y-[20%] -z-10 bg-[radial-gradient(ellipse_at_40%_55%,rgb(117_170_219/0.28),transparent_65%)] blur-2xl" />
           {"207".split("").map((d, i) => (
@@ -82,6 +82,7 @@ export function Hero() {
               <span className="hero-digit inline-block">{d}</span>
             </span>
           ))}
+          <span className="sr-only"> partidos de Lionel Messi con la Selección Argentina</span>
         </h1>
         <div className="mt-6 flex flex-wrap items-end justify-between gap-8 md:mt-9">
           {/* Sin hero-fade: es el candidato a LCP en mobile, no debe arrancar en opacity 0. */}

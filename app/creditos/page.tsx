@@ -6,7 +6,8 @@ import { matches, formatDate } from "@/lib/matches";
 
 export const metadata: Metadata = {
   title: "Créditos — 207",
-  description: "Autores, licencias y fuentes de las fotos usadas en 207, todas de Wikimedia Commons.",
+  description: "Autores, licencias y fuentes de las fotos usadas en 207, el homenaje a Lionel Messi.",
+  alternates: { canonical: "/creditos" },
 };
 
 export default function Creditos() {

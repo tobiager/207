@@ -65,13 +65,14 @@ export function Preloader() {
       signalReady();
       return;
     }
+    const state = { v: 0 };
     drawCounter(counter.current, 0);
+    document.fonts?.ready.then(() => drawCounter(counter.current, Math.round(state.v)));
     document.documentElement.style.overflow = "hidden";
     lenis.current?.stop();
     window.scrollTo(0, 0);
 
     const ctx = gsap.context(() => {
-      const state = { v: 0 };
       const sq = gsap.utils.toArray<HTMLElement>(".shard", shards.current);
       gsap.set(sq, { opacity: 0, scale: 0.4 });
 
@@ -134,6 +135,8 @@ export function Preloader() {
               className="shard block h-[9px] w-[9px] rounded-[2px] md:h-[12px] md:w-[12px]"
               style={{
                 background: c.isFinal && c.won ? "#C9A44C" : `var(--lvl-${c.level})`,
+                opacity: 0,
+                transform: "scale(0.4)",
               }}
             />
           ))}

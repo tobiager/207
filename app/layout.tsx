@@ -35,8 +35,15 @@ const mono = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: site.title,
+  title: { default: `${site.title} · Homenaje a Lionel Messi`, template: "%s" },
   description: site.description,
+  applicationName: "207",
+  authors: [{ name: site.author, url: site.links.github }],
+  creator: site.author,
+  keywords: ["Lionel Messi", "Messi", "Selección Argentina", "207 partidos", "125 goles", "homenaje", "despedida", "Benín", "Mundial 2022", "Copa América"],
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+  category: "sports",
   openGraph: {
     title: site.title,
     description: "Una carrera entera. Un solo gráfico.",
