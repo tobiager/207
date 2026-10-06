@@ -73,7 +73,13 @@ export function Footer() {
       </div>
 
       <div className="flex flex-wrap justify-between gap-4 border-t border-bone/[0.08] pt-6 text-[10px] leading-relaxed text-bone/45 md:text-[11px]">
-        <span>Homenaje no oficial hecho por un hincha. Fotos con licencia libre, créditos en cada imagen.</span>
+        <span>
+          Homenaje no oficial hecho por un hincha. Fotos con licencia libre, créditos en cada imagen y en{" "}
+          <a href="/creditos" className="underline underline-offset-2 hover:text-bone">
+            /creditos
+          </a>
+          .
+        </span>
         <span>06.10.2026 · Buenos Aires</span>
       </div>
     </footer>

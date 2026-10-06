@@ -230,7 +230,12 @@
     "isFinal": false,
     "won": true,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m018.webp",
+      "credit": "Nica* · Wikimedia Commons",
+      "license": "CC BY 2.5",
+      "href": "https://commons.wikimedia.org/wiki/File:Messi_Copa_America_2007.jpg"
+    },
     "verified": true
   },
   {
@@ -646,7 +651,12 @@
     "isFinal": false,
     "won": false,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m050.webp",
+      "credit": "Saadick Dhansay · Wikimedia Commons",
+      "license": "CC BY 2.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Lionel_Messi_2010.jpg"
+    },
     "verified": true
   },
   {
@@ -711,7 +721,12 @@
     "isFinal": false,
     "won": true,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m055.webp",
+      "credit": "Fanny Schertzer · Wikimedia Commons",
+      "license": "CC BY 3.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Lionel_Messi_(R)_%E2%80%93_Portugal_vs._Argentina,_9th_February_2011_(1).jpg"
+    },
     "verified": true
   },
   {
@@ -750,7 +765,12 @@
     "isFinal": false,
     "won": false,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m058.webp",
+      "credit": "LGEPR · Wikimedia Commons",
+      "license": "CC BY 2.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Argentina_vs_Bolivia_-_2011-07-01.jpg"
+    },
     "verified": true
   },
   {
@@ -880,7 +900,12 @@
     "isFinal": false,
     "won": true,
     "note": "Hat-trick.",
-    "image": null,
+    "image": {
+      "src": "/img/m068.webp",
+      "credit": "Fanny Schertzer · Wikimedia Commons",
+      "license": "CC BY 3.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Lionel_Messi_-_Switzerland_vs._Argentina,_29th_February_2012.jpg"
+    },
     "verified": true
   },
   {
@@ -1205,7 +1230,12 @@
     "isFinal": true,
     "won": false,
     "note": "Final del Mundial 2014. Subcampeón.",
-    "image": null,
+    "image": {
+      "src": "/img/m093.webp",
+      "credit": "Jimmy Baikovicius · Wikimedia Commons",
+      "license": "CC BY-SA 2.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Lionel_Messi_World_Cup_final_-_140713-9163-jikatu_.jpg"
+    },
     "verified": true
   },
   {
@@ -1322,7 +1352,12 @@
     "isFinal": false,
     "won": true,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m102.webp",
+      "credit": "Francisco Javier Gutierrez Zuñiga · Wikimedia Commons",
+      "license": "CC BY-SA 2.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Tiro_Libre_Messi_(19153749690).jpg"
+    },
     "verified": true
   },
   {
@@ -1595,7 +1630,12 @@
     "isFinal": false,
     "won": true,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m123.webp",
+      "credit": "Voltmetro · Wikimedia Commons",
+      "license": "CC BY-SA 4.0",
+      "href": "https://commons.wikimedia.org/wiki/File:2017_FRIENDLY_MATCH_RUSSIA_v_ARGENTINA_-_Messi_free_kick.jpg"
+    },
     "verified": true
   },
   {
@@ -1647,7 +1687,12 @@
     "isFinal": false,
     "won": true,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m127.webp",
+      "credit": "Кирилл Венедиктов · Wikimedia Commons",
+      "license": "CC BY-SA 3.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Messi_after_scoring_against_Nigeria.jpg"
+    },
     "verified": true
   },
   {
@@ -2167,7 +2212,12 @@
     "isFinal": false,
     "won": true,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m167.webp",
+      "credit": "Hossein Zohrevand · Wikimedia Commons",
+      "license": "CC BY 4.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Lionel-Messi-Argentina-2022-FIFA-World-Cup_sharpness.jpg"
+    },
     "verified": true
   },
   {
@@ -2648,7 +2698,12 @@
     "isFinal": false,
     "won": true,
     "note": null,
-    "image": null,
+    "image": {
+      "src": "/img/m204.webp",
+      "credit": "Bryan Berlin · Wikimedia Commons",
+      "license": "CC BY-SA 4.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Lionel_Messi_Argentina_v_Egypt_7_July_2026-112.jpg"
+    },
     "verified": true
   },
   {
@@ -2687,7 +2742,12 @@
     "isFinal": true,
     "won": false,
     "note": "Final del Mundial 2026. Subcampeón.",
-    "image": null,
+    "image": {
+      "src": "/img/m207.webp",
+      "credit": "Bryan Berlin · Wikimedia Commons",
+      "license": "CC BY-SA 4.0",
+      "href": "https://commons.wikimedia.org/wiki/File:Lionel_Messi_Argentina_v_Spain_19_July_2026-070.jpg"
+    },
     "verified": true
   }
 ]
