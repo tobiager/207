@@ -61,6 +61,8 @@ body {
   letter-spacing: -0.005em;
 }
 
+.pl-counter::before { content: attr(data-v); }
+
 /* ---------- Textura: grano animado + viñeta + reflectores ---------- */
 .grain {
   position: fixed;

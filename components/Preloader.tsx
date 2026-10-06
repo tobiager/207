@@ -75,7 +75,7 @@ export function Preloader() {
         duration: 2.1,
         ease: "expo.in",
         onUpdate: () => {
-          if (counter.current) counter.current.textContent = String(Math.round(state.v)).padStart(3, "0");
+          if (counter.current) counter.current.dataset.v = String(Math.round(state.v)).padStart(3, "0");
         },
       })
         .to(".pl-bar", { scaleX: 1, duration: 2.1, ease: "expo.in" }, 0)
@@ -109,9 +109,8 @@ export function Preloader() {
   return (
     <div ref={root} className="fixed inset-0 z-[95] flex items-center justify-center bg-black" aria-hidden="true">
       <div className="relative flex flex-col items-center gap-6">
-        <span ref={counter} className="font-mono text-[22vw] font-medium tabular-nums leading-none tracking-[0.04em] text-bone md:text-[120px]">
-          000
-        </span>
+        {/* Texto generado por CSS (data-v): no es candidato a LCP, así el LCP lo toma el hero. */}
+        <span ref={counter} data-v="000" className="pl-counter font-mono text-[22vw] font-medium tabular-nums leading-none tracking-[0.04em] text-bone md:text-[120px]" />
         <div
           ref={shards}
           className="pointer-events-none absolute left-1/2 top-1/2 grid -translate-x-1/2 -translate-y-1/2 gap-[3px]"
