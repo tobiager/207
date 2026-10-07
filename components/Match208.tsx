@@ -1,49 +1,183 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
+import { useLazyGSAP } from "@/lib/useLazyGSAP";
 import { site } from "@/config/site";
-import { useMatchState } from "@/lib/useMatchState";
+import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 
-/** Un único cuadradito vacío, latiendo. Estados: antes / en vivo / completado. */
-export function Match208() {
-  const { phase, remaining } = useMatchState();
-  const m = site.match208;
-  const score = m.finalScore;
+const m = site.lastMatch;
+const isLeo = (scorer: string) => scorer === "Messi";
+
+/** Carga widgets.js de X recién cuando la sección se acerca al viewport (no pesa en el LCP). */
+function XEmbeds() {
+  const box = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = box.current;
+    if (!el || !m.embeds.length) return;
+    type Twttr = { widgets?: { load: (el?: HTMLElement) => void } };
+    const load = () => {
+      const w = window as unknown as { twttr?: Twttr };
+      if (w.twttr?.widgets) return w.twttr.widgets.load(el);
+      const src = "https://platform.twitter.com/widgets.js";
+      if (document.querySelector(`script[src="${src}"]`)) return;
+      const s = document.createElement("script");
+      s.src = src;
+      s.async = true;
+      s.charset = "utf-8";
+      document.body.appendChild(s);
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          load();
+        }
+      },
+      { rootMargin: "800px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  if (!m.embeds.length) return null;
 
   return (
-    <section id="partido-208" className="px-gutter relative flex flex-col items-center gap-10 border-t border-bone/[0.06] py-28 text-center md:gap-14 md:py-44" aria-labelledby="p208-title">
-      {phase === "after" && <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgb(117_170_219/0.16),transparent_60%)]" />}
-      <span className="eyebrow">// 07 — Partido 208</span>
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-wrap items-end justify-between gap-3 border-t border-bone/10 pt-8 text-left">
+        <span className="eyebrow">El partido, en X</span>
+        <span className="max-w-[360px] font-mono text-[10px] leading-relaxed text-bone/45 md:text-[11px]">
+          Videos y fotos de sus autores, con el embed oficial de X.
+        </span>
+      </div>
+      <div ref={box} className="x-embeds grid items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {m.embeds.map((url) => (
+          <blockquote key={url} className="twitter-tweet" data-theme="dark" data-dnt="true" data-align="center" data-conversation="none">
+            <a href={url} target="_blank" rel="noreferrer" className="font-mono text-xs text-celeste underline-offset-2 hover:underline">
+              Ver en X → {url.replace(/^https:\/\/x\.com\//, "@").replace(/\/status\/.*/, "")}
+            </a>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-      {phase === "after" ? (
-        <div className="flex h-36 w-36 items-center justify-center rounded-2xl bg-celeste font-display text-6xl font-black text-night shadow-[0_0_100px_rgb(117_170_219/0.7)] md:h-[220px] md:w-[220px] md:text-[84px]">
-          <span className="flex flex-col items-center leading-none">
-            208
-            {score && <span className="mt-2 text-[22px] tracking-wide md:text-[34px]">{score}</span>}
-          </span>
-        </div>
-      ) : phase === "live" ? (
-        <div className="heartbeat heartbeat-fast h-36 w-36 rounded-2xl border-2 border-celeste bg-celeste/30 shadow-[0_0_80px_rgb(117_170_219/0.45)] md:h-[220px] md:w-[220px]" aria-hidden="true" />
-      ) : (
-        <div className="heartbeat h-36 w-36 rounded-2xl border-2 border-dashed border-celeste/80 bg-celeste/[0.06] md:h-[220px] md:w-[220px]" aria-hidden="true" />
-      )}
+/** El último cuadradito, pintado: resultado, goles minuto a minuto y lo que dejó Leo. */
+export function Match208() {
+  const root = useRef<HTMLElement>(null);
+  const goalsByLeo = m.goals.filter((g) => isLeo(g.scorer)).length;
+  const assists = m.goals.filter((g) => g.messi.startsWith("asistencia")).length;
 
-      <div className="relative flex flex-col items-center gap-4 md:gap-5" aria-live="polite">
-        {phase === "live" && (
-          <span className="flex items-center gap-2.5 text-[11px] tracking-[0.14em] md:text-xs">
-            <span className="live-dot h-2.5 w-2.5 rounded-full bg-live" /> EN VIVO · jugando su último partido
-          </span>
-        )}
-        <h2 id="p208-title" className="h-display text-[46px] md:text-[84px]">
-          {phase === "after" && score ? `ARG ${score} BEN` : <>Argentina vs {m.opponent}</>}
+  useLazyGSAP(() => {
+    const st = { trigger: root.current, start: "top 70%" };
+    gsap.fromTo(
+      ".lm-square",
+      { scale: 0.6, opacity: 0, boxShadow: "0 0 0 rgb(117 170 219 / 0)" },
+      { scale: 1, opacity: 1, boxShadow: "0 0 100px rgb(117 170 219 / 0.6)", duration: 1.6, ease: "expo.out", scrollTrigger: st },
+    );
+    gsap.fromTo(".lm-bar", { scaleX: 0 }, { scaleX: 1, duration: 1.8, ease: "power3.inOut", scrollTrigger: { trigger: ".lm-timeline", start: "top 80%" } });
+    gsap.from(".lm-dot", {
+      scale: 0,
+      opacity: 0,
+      duration: 0.8,
+      ease: "back.out(3)",
+      stagger: 0.35,
+      delay: 0.6,
+      scrollTrigger: { trigger: ".lm-timeline", start: "top 80%" },
+    });
+    gsap.from(".lm-goal", { y: 18, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.12, scrollTrigger: { trigger: ".lm-goals", start: "top 85%" } });
+  }, root);
+
+  return (
+    <section
+      ref={root}
+      id="partido-208"
+      className="px-gutter relative flex flex-col items-center gap-12 overflow-hidden border-t border-bone/[0.06] py-28 text-center md:gap-16 md:py-44"
+      aria-labelledby="p208-title"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgb(117_170_219/0.16),transparent_55%)]" />
+      <span className="eyebrow relative">// 07 — Partido {m.n} · La despedida</span>
+
+      <div className="lm-square relative flex h-36 w-36 items-center justify-center rounded-2xl bg-celeste font-display text-6xl font-black text-night shadow-[0_0_100px_rgb(117_170_219/0.6)] md:h-[220px] md:w-[220px] md:text-[84px]">
+        <span className="flex flex-col items-center leading-none">
+          {m.n}
+          <span className="mt-2 text-[22px] tracking-wide md:text-[34px]">{m.score}</span>
+        </span>
+      </div>
+
+      <div className="relative flex flex-col items-center gap-4 md:gap-5">
+        <h2 id="p208-title" className="h-display text-[54px] md:text-[96px]">
+          ARG {m.score} {m.short}
         </h2>
         <span className="text-[11px] tracking-[0.16em] text-bone/65 md:text-sm">
-          {phase === "after"
-            ? `PARTIDO FINALIZADO · 06.10.2026 · ${m.venue.toUpperCase()}`
-            : `${m.venue.toUpperCase()} · HOY 20:00${phase === "before" && remaining ? ` · faltan ${remaining}` : ""}`}
+          {m.competition.toUpperCase()} · {m.venue.toUpperCase()} · {m.date}
         </span>
-        <p className="mt-2 font-serif text-2xl italic text-bone/75 md:text-[32px]">
-          {phase === "after" ? "208 partidos. Gracias, Leo." : phase === "live" ? "El último cuadradito se está pintando." : "El último cuadradito todavía está vacío."}
-        </p>
+      </div>
+
+      {/* Lo que hizo Leo */}
+      <dl className="relative grid w-full max-w-[760px] grid-cols-3 gap-4 border-y border-bone/10 py-6 md:gap-10 md:py-8">
+        {[
+          { v: goalsByLeo, l: goalsByLeo === 1 ? "Gol" : "Goles", cls: "text-celeste" },
+          { v: assists, l: assists === 1 ? "Asistencia" : "Asistencias", cls: "" },
+          { v: `${goalsByLeo + assists}/${m.goals.length}`, l: "Goles con su firma", cls: "text-celeste" },
+        ].map((s) => (
+          <div key={s.l} className="flex flex-col-reverse items-center gap-3">
+            <dt className="text-[10px] uppercase tracking-[0.14em] text-bone/55 md:text-[11px]">{s.l}</dt>
+            <dd className={`m-0 font-display text-[48px] font-black leading-[0.9] tabular-nums md:text-[80px] ${s.cls}`}>{s.v}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {/* Minuto a minuto */}
+      <div className="lm-timeline relative w-full max-w-[760px]" aria-hidden="true">
+        <div className="relative h-px w-full bg-bone/15">
+          <div className="lm-bar absolute inset-0 origin-left bg-celeste/60" />
+          {m.goals.map((g) => (
+            <span
+              key={g.min}
+              className={`lm-dot absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full ${
+                isLeo(g.scorer) ? "h-4 w-4 bg-celeste shadow-[0_0_24px_#75AADB]" : "h-2.5 w-2.5 bg-bone"
+              }`}
+              style={{ left: `${(g.min / 90) * 100}%` }}
+            />
+          ))}
+        </div>
+        <div className="mt-3 flex justify-between font-mono text-[10px] text-bone/40">
+          <span>0&apos;</span>
+          <span>45&apos;</span>
+          <span>90&apos;</span>
+        </div>
+      </div>
+
+      <ol className="lm-goals relative flex w-full max-w-[760px] flex-col divide-y divide-bone/10 text-left">
+        {m.goals.map((g) => {
+          const leo = isLeo(g.scorer);
+          return (
+            <li key={g.min} className="lm-goal grid grid-cols-[56px_minmax(0,1fr)] items-baseline gap-4 py-4 md:grid-cols-[88px_minmax(0,1fr)_auto] md:py-5">
+              <span className={`font-display text-3xl font-black tabular-nums md:text-[44px] ${leo ? "text-celeste" : "text-bone/80"}`}>{g.min}&apos;</span>
+              <span className={`font-serif text-2xl italic leading-tight md:text-[32px] ${leo ? "text-bone" : "text-bone/80"}`}>
+                {g.scorer}, {g.how}
+              </span>
+              <span
+                className={`col-start-2 font-mono text-[11px] uppercase tracking-[0.12em] md:col-start-3 md:text-xs ${leo ? "text-celeste" : "text-bone/55"}`}
+              >
+                {leo ? `★ ${g.messi}` : `${g.messi} de Messi`}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+
+      <p className="relative max-w-[760px] font-serif text-[28px] italic leading-tight text-bone/80 md:text-[40px]">
+        {TOTAL_MATCHES} partidos. {TOTAL_GOALS} goles.
+        <br />
+        <span className="text-celeste">El último cuadradito, pintado.</span>
+      </p>
+
+      <div className="relative w-full max-w-[1344px]">
+        <XEmbeds />
       </div>
     </section>
   );

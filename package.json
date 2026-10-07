@@ -2,7 +2,7 @@
   "name": "207",
   "version": "1.0.0",
   "private": true,
-  "description": "207 — Homenaje a Lionel Messi. Una carrera entera, un solo gráfico.",
+  "description": "208 — Homenaje a Lionel Messi. Una carrera entera, un solo gráfico.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

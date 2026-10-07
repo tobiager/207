@@ -74,7 +74,7 @@ export const gallery: GalleryItem[] = photos
 
 /** Fotos de fondo del hero y de los capítulos (mismo formato). */
 export const heroImage: MatchImage | null = byFile("m204");
-export const chapterImages: Record<number, MatchImage | null> = {
+export const chapterImages: Record<string | number, MatchImage | null> = {
   2005: byFile("x-2005"),
   2014: byFile("x-tears"),
   2016: byFile("x-tv"),
@@ -82,4 +82,6 @@ export const chapterImages: Record<number, MatchImage | null> = {
   2022: byFile("x-champ"),
   2024: byFile("x-sorteo"),
   2026: byFile("m207"),
+  // Sin foto libre del partido 208 todavía: se usa una de 2026. Reemplazar cuando haya una en Commons.
+  despedida: byFile("m204"),
 };

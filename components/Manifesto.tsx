@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { gsap, SplitText } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 
 const LINES = [
   "Durante veintiún años jugó con el peso de un país en la espalda.",
@@ -10,7 +11,7 @@ const LINES = [
   "Y un día, el mundo entero fue celeste y blanco.",
 ];
 
-const MARQUEE = "GRACIAS LEO · 207 · 125 · 10 · ";
+const MARQUEE = `GRACIAS LEO · ${TOTAL_MATCHES} · ${TOTAL_GOALS} · 10 · `;
 
 export function Manifesto() {
   const root = useRef<HTMLElement>(null);

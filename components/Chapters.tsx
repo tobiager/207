@@ -11,7 +11,7 @@ const MINI_COLS = 27;
 const CELL = 8;
 const STEP = 11;
 
-/** Mini-grid de 207 partidos en un solo SVG (3 paths en vez de 207 nodos). */
+/** Mini-grid de todos los partidos en un solo SVG (3 paths en vez de un nodo por partido). */
 function MiniGrid({ picked }: { picked: Set<number> }) {
   const off: string[] = [];
   const on: string[] = [];
@@ -92,7 +92,7 @@ export function Chapters() {
           </span>
           <ol className="hidden gap-6 text-xs text-bone/45 md:flex">
             {chapters.map((c) => (
-              <li key={c.year}>{c.year}</li>
+              <li key={c.title}>{c.big ?? c.year}</li>
             ))}
           </ol>
         </div>
@@ -100,21 +100,22 @@ export function Chapters() {
         <div ref={track} className="no-scrollbar flex gap-3 overflow-x-auto pl-[var(--gutter)] pr-[var(--gutter)] motion-safe:overflow-visible md:gap-8">
           {chapters.map((c, i) => {
             const picked = new Set(matches.filter(c.pick).map((m) => m.n));
+            const img = chapterImages[c.photo ?? c.year];
             return (
               <article
-                key={c.year}
+                key={c.title}
                 className="ch-panel relative h-[68svh] min-h-[460px] w-[86vw] flex-none overflow-hidden rounded-md md:h-[72vh] md:w-[78vw]"
                 aria-label={`${c.year}: ${c.title}`}
               >
                 <div className="ch-photo absolute -inset-x-[14%] inset-y-0">
-                  <Photo image={chapterImages[c.year]} alt={`${c.title}, ${c.year}`} credit="none" sizes="90vw" className="h-full" />
+                  <Photo image={img} alt={`${c.title}, ${c.year}`} credit="none" sizes="90vw" className="h-full" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-night via-night/30 to-night/10" />
                 <span className="absolute left-4 top-4 font-mono text-[10px] uppercase tracking-[0.16em] text-bone/70 md:left-9 md:top-7 md:text-[11px]">
                   Capítulo {String(i + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")} · {c.title}
                 </span>
                 <span className="absolute right-4 top-4 hidden font-mono text-[10px] text-bone/55 md:right-9 md:top-7 md:block">
-                  {chapterImages[c.year] ? `${chapterImages[c.year]!.credit} · ${chapterImages[c.year]!.license}` : ""}
+                  {img ? `${img.credit} · ${img.license}` : ""}
                 </span>
                 <div className="absolute inset-x-4 bottom-5 flex flex-wrap items-end justify-between gap-6 md:inset-x-9 md:bottom-9 md:gap-8">
                   <div className="flex flex-col gap-3 overflow-hidden">
@@ -122,7 +123,7 @@ export function Chapters() {
                       className={`ch-reveal block font-display font-black leading-[0.76] tracking-[-0.02em] ${c.gold ? "text-gold" : "text-bone"}`}
                       style={{ fontSize: "clamp(130px, 21vw, 320px)", paddingTop: "0.1em" }}
                     >
-                      {c.year}
+                      {c.big ?? c.year}
                     </span>
                     <p className="ch-reveal max-w-[640px] font-serif text-[26px] italic leading-[1.05] md:text-[44px]">{c.line}</p>
                   </div>
