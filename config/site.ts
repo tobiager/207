@@ -33,15 +33,16 @@ export const site = {
       { min: 62, scorer: "Nico Paz", how: "zurdazo", messi: "asistencia" },
       { min: 71, scorer: "Messi", how: "de penal", messi: "gol 126" },
     ],
-    /**
-     * Posts de X con video/fotos del partido. Se muestran con el embed oficial de X
-     * (con el autor visible), no se descargan ni se re-suben.
-     */
-    embeds: [
-      "https://x.com/messismo10/status/2107672622162960554",
-      "https://x.com/sudanalytics_/status/2107669619091656757",
-      "https://x.com/gatarys/status/2107587131095048656",
-    ],
+    /** Posts de X con video del partido. Se muestran con el embed oficial de X (con el autor visible). */
+    embeds: ["https://x.com/messismo10/status/2107672622162960554"],
+    /** Frase + fotos que cierran la sección del partido 208. */
+    quote: {
+      text: "Poder es que la gente te quiera.",
+      photos: [
+        { src: "/img/x-poder-1.webp", alt: "Messi de espaldas frente a la tribuna argentina, que le muestra camisetas con su nombre" },
+        { src: "/img/x-poder-2.webp", alt: "Una multitud de hinchas caminando con la camiseta 10 de Messi" },
+      ],
+    },
   },
 } as const;
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { gsap } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
 import { site } from "@/config/site";
@@ -46,18 +47,55 @@ function XEmbeds() {
   return (
     <div className="flex w-full flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-3 border-t border-bone/10 pt-8 text-left">
-        <span className="eyebrow">El partido, en X</span>
+        <span className="eyebrow">La despedida, en video</span>
         <span className="max-w-[360px] font-mono text-[10px] leading-relaxed text-bone/45 md:text-[11px]">
-          Videos y fotos de sus autores, con el embed oficial de X.
+          Video de su autor, con el embed oficial de X.
         </span>
       </div>
-      <div ref={box} className="x-embeds grid items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div ref={box} className="x-embeds mx-auto w-full max-w-[550px]">
         {m.embeds.map((url) => (
           <blockquote key={url} className="twitter-tweet" data-theme="dark" data-dnt="true" data-align="center" data-conversation="none">
             <a href={url} target="_blank" rel="noreferrer" className="font-mono text-xs text-celeste underline-offset-2 hover:underline">
               Ver en X → {url.replace(/^https:\/\/x\.com\//, "@").replace(/\/status\/.*/, "")}
             </a>
           </blockquote>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Foto con el tratamiento duotono de la web; recupera el color con hover o tap. */
+function QuotePhoto({ src, alt }: { src: string; alt: string }) {
+  const [color, setColor] = useState(false);
+  return (
+    <figure
+      className="lm-photo m-0"
+      data-cursor="grow"
+      onPointerEnter={(e) => e.pointerType === "mouse" && setColor(true)}
+      onPointerLeave={() => setColor(false)}
+      onClick={() => setColor((v) => !v)}
+    >
+      <div className={`duotone photo-grain relative aspect-[4/5] overflow-hidden rounded ${color ? "is-color" : ""}`}>
+        <Image src={src} alt={alt} fill sizes="(min-width: 768px) 520px, 50vw" className="object-cover" />
+      </div>
+    </figure>
+  );
+}
+
+/** "Poder es que la gente te quiera." y las dos fotos, cerrando la sección. */
+function Quote() {
+  const q = m.quote;
+  return (
+    <div className="lm-quote flex w-full flex-col items-center gap-10 border-t border-bone/10 pt-16 md:gap-16 md:pt-24">
+      <p className="lm-quote-text max-w-[1100px] text-balance font-serif italic leading-[0.95] tracking-[-0.02em]" style={{ fontSize: "clamp(52px, 8.4vw, 136px)" }}>
+        {q.text}
+      </p>
+      <div className="grid w-full max-w-[1080px] grid-cols-2 gap-2.5 md:gap-6">
+        {q.photos.map((ph, i) => (
+          <div key={ph.src} className={i === 1 ? "mt-10 md:mt-24" : ""}>
+            <QuotePhoto src={ph.src} alt={ph.alt} />
+          </div>
         ))}
       </div>
     </div>
@@ -86,6 +124,10 @@ export function Match208() {
       stagger: 0.35,
       delay: 0.6,
       scrollTrigger: { trigger: ".lm-timeline", start: "top 80%" },
+    });
+    gsap.from(".lm-quote-text", { y: 40, opacity: 0, filter: "blur(10px)", duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: ".lm-quote", start: "top 75%" } });
+    gsap.utils.toArray<HTMLElement>(".lm-photo").forEach((el) => {
+      gsap.fromTo(el, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } });
     });
     gsap.from(".lm-goal", { y: 18, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.12, scrollTrigger: { trigger: ".lm-goals", start: "top 85%" } });
   }, root);
@@ -178,6 +220,10 @@ export function Match208() {
 
       <div className="relative w-full max-w-[1344px]">
         <XEmbeds />
+      </div>
+
+      <div className="relative w-full max-w-[1344px]">
+        <Quote />
       </div>
     </section>
   );
