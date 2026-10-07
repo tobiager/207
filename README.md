@@ -51,7 +51,7 @@ El partido 208 (3-0 a Benín, goles de Otamendi, Nico Paz y Messi de penal) se c
 
 ## Créditos de fotos
 
-Todas las fotos alojadas en el sitio son de Wikimedia Commons con licencias CC BY o CC BY-SA, con crédito visible. Autores, licencias y links de origen: [`/creditos`](https://208messi.vercel.app/creditos) y `data/gallery.ts`. El video del partido 208 se muestra con el embed oficial de X, con el crédito de su autor. Las dos fotos de la frase del 208 (`public/img/x-poder-*.webp`) no tienen licencia libre ni autor identificado.
+Todas las fotos alojadas en el sitio son de Wikimedia Commons con licencias CC BY o CC BY-SA, con crédito visible. Autores, licencias y links de origen: [`/creditos`](https://208messi.vercel.app/creditos) y `data/gallery.ts`. El video del partido 208 se muestra con el embed oficial de X, con el crédito de su autor. Las dos fotos de la frase del 208 (`public/img/x-poder-*.webp`) y el video de la tribuna (`public/video/monumental-canta.mp4`) no tienen licencia libre ni autor identificado.
 
 ## Licencia
 

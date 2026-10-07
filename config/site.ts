@@ -33,6 +33,12 @@ export const site = {
       { min: 62, scorer: "Nico Paz", how: "zurdazo", messi: "asistencia" },
       { min: 71, scorer: "Messi", how: "de penal", messi: "gol 126" },
     ],
+    /** Video vertical de la tribuna coreando a Messi (se sirve desde /public). */
+    crowd: {
+      src: "/video/monumental-canta.mp4",
+      poster: "/img/monumental-canta-poster.webp",
+      title: "Un estadio entero cantando su nombre.",
+    },
     /** Posts de X con video del partido. Se muestran con el embed oficial de X (con el autor visible). */
     embeds: ["https://x.com/messismo10/status/2107672622162960554"],
     /** Frase + fotos que cierran la sección del partido 208. */

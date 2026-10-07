@@ -65,6 +65,73 @@ function XEmbeds() {
   );
 }
 
+/** Video vertical de la tribuna: arranca mudo y en loop cuando entra en pantalla; el botón activa el sonido. */
+function CrowdVideo() {
+  const c = m.crowd;
+  const ref = useRef<HTMLVideoElement>(null);
+  const [muted, setMuted] = useState(true);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          v.preload = "auto";
+          v.play().catch(() => {});
+        } else v.pause();
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+
+  const toggle = () => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+    if (!v.muted) {
+      v.currentTime = 0;
+      v.play().catch(() => {});
+    }
+  };
+
+  return (
+    <div className="lm-crowd grid w-full max-w-[1080px] items-center gap-10 border-t border-bone/10 pt-16 text-left md:grid-cols-[minmax(0,1fr)_minmax(0,380px)] md:gap-16 md:pt-24">
+      <div className="flex flex-col gap-5 md:gap-7">
+        <span className="eyebrow">El Monumental</span>
+        <p className="font-serif text-[40px] italic leading-[1] tracking-[-0.01em] md:text-[64px]">{c.title}</p>
+        <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Tocá el video para escucharlo.</p>
+      </div>
+      <button
+        type="button"
+        onClick={toggle}
+        className="group relative mx-auto block aspect-[9/16] w-full max-w-[340px] overflow-hidden rounded-2xl border border-celeste/25 shadow-[0_30px_100px_rgb(117_170_219/0.18)]"
+        aria-label={muted ? "Activar sonido del video" : "Silenciar video"}
+      >
+        <video
+          ref={ref}
+          className="absolute inset-0 h-full w-full object-cover"
+          src={c.src}
+          poster={c.poster}
+          muted
+          loop
+          playsInline
+          preload="none"
+          aria-label="Video de la tribuna del Monumental coreando a Messi en su despedida"
+        />
+        <span className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-night/80 to-transparent" />
+        <span className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-bone/25 bg-night/60 px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-bone backdrop-blur transition-colors duration-300 group-hover:border-celeste md:text-[11px]">
+          <span className={`h-1.5 w-1.5 rounded-full ${muted ? "bg-bone/50" : "live-dot bg-celeste"}`} />
+          {muted ? "Activar sonido" : "Sonando"}
+        </span>
+      </button>
+    </div>
+  );
+}
+
 /** Foto con el tratamiento duotono de la web; recupera el color con hover o tap. */
 function QuotePhoto({ src, alt }: { src: string; alt: string }) {
   const [color, setColor] = useState(false);
@@ -211,6 +278,10 @@ export function Match208() {
           );
         })}
       </ol>
+
+      <div className="relative flex w-full justify-center">
+        <CrowdVideo />
+      </div>
 
       <p className="relative max-w-[760px] font-serif text-[28px] italic leading-tight text-bone/80 md:text-[40px]">
         {TOTAL_MATCHES} partidos. {TOTAL_GOALS} goles.

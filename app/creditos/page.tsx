@@ -20,7 +20,7 @@ export default function Creditos() {
         </Link>
         <h1 className="h-display text-[56px] md:text-[96px]">Créditos</h1>
         <p className="max-w-[640px] font-serif text-xl italic text-bone/75">
-          Fotos de Wikimedia Commons con licencias libres (CC BY y CC BY-SA), salvo una captura de TV sin licencia libre (se indica abajo) y las dos fotos que acompañan la frase del partido 208, que circulan en redes sin licencia libre ni autor identificado. Gracias a quienes las sacaron y las compartieron.
+          Fotos de Wikimedia Commons con licencias libres (CC BY y CC BY-SA), salvo una captura de TV sin licencia libre (se indica abajo) y las dos fotos y el video de la tribuna del partido 208, que circulan en redes sin licencia libre ni autor identificado. Gracias a quienes las sacaron y las compartieron.
           Los datos de los partidos vienen de Wikipedia y worldfootball.net.
         </p>
       </header>
