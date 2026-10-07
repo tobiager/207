@@ -3,7 +3,7 @@ import { C, OgGrid, ogFonts } from "@/lib/og";
 import { matches, formatDate } from "@/lib/matches";
 import { site } from "@/config/site";
 
-export const alt = "Mi partido favorito de Leo — 207";
+export const alt = "Mi partido favorito de Leo — " + site.name;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -36,7 +36,7 @@ export default async function MatchOG({ params }: { params: Promise<{ n: string 
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <div style={{ display: "flex", fontFamily: "Display", fontSize: 44 }}>207</div>
+          <div style={{ display: "flex", fontFamily: "Display", fontSize: 44 }}>{site.name}</div>
           <OgGrid size={17} gap={4} highlight={m.n} />
           <div style={{ display: "flex", fontSize: 14, color: "rgba(244,241,234,0.5)" }}>{`Elegí el tuyo en ${site.url.replace(/^https?:\/\//, "")}`}</div>
         </div>

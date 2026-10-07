@@ -5,6 +5,7 @@ import { gsap, useGSAP, MOTION_OK } from "@/lib/gsap";
 import { heroImage } from "@/data/gallery";
 import { Photo } from "./Photo";
 import { Countdown } from "./Countdown";
+import { TOTAL_MATCHES } from "@/lib/matches";
 import { onReady, shouldPlayIntro } from "./Preloader";
 
 export function Hero() {
@@ -61,7 +62,7 @@ export function Hero() {
       {/* Nav */}
       <header className="hero-fade px-gutter relative z-10 flex items-center justify-between gap-4 pt-5 text-[11px] uppercase tracking-[0.14em] md:pt-7">
         <div className="flex items-center gap-5">
-          <span className="font-display text-2xl font-black tracking-normal">207</span>
+          <span className="font-display text-2xl font-black tracking-normal">{TOTAL_MATCHES}</span>
           <span className="hidden text-bone/55 md:inline">Lionel Andrés Messi · Selección 2005—2026</span>
         </div>
         <Countdown />
@@ -74,10 +75,10 @@ export function Hero() {
         <h1
           className="hero-207 relative isolate font-display font-black leading-[0.78] tracking-[-0.02em] text-bone"
           style={{ fontSize: "clamp(220px, 46vw, 680px)" }}
-          aria-label="207 partidos de Lionel Messi con la Selección Argentina"
+          aria-label={`${TOTAL_MATCHES} partidos de Lionel Messi con la Selección Argentina`}
         >
           <span aria-hidden="true" className="pointer-events-none absolute -inset-x-[10%] -inset-y-[20%] -z-10 bg-[radial-gradient(ellipse_at_40%_55%,rgb(117_170_219/0.28),transparent_65%)] blur-2xl" />
-          {"207".split("").map((d, i) => (
+          {String(TOTAL_MATCHES).split("").map((d, i) => (
             <span key={i} className="inline-block align-bottom [clip-path:inset(-5%_-10%_0_-10%)]">
               <span className="hero-digit inline-block">{d}</span>
             </span>

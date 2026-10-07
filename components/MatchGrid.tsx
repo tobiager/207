@@ -45,7 +45,7 @@ export function MatchGrid() {
         };
         setCounters(0);
 
-        // Pintado por CSS: una sola variable --p (partidos pintados) en vez de 207 tweens.
+        // Pintado por CSS: una sola variable --p (partidos pintados) en vez de un tween por partido.
         grid.dataset.anim = "true";
         const state = { p: 0 };
         const paint = () => {
@@ -102,7 +102,7 @@ export function MatchGrid() {
         <div className="flex flex-col gap-6 lg:w-[36%] lg:gap-9">
           <span className="eyebrow">// 02 — El gráfico</span>
           <h2 id="grafico-title" className="h-display text-[54px] md:text-[clamp(54px,5vw,92px)]">
-            207 contribuciones <span className="text-celeste">a la historia</span>
+            {TOTAL_MATCHES} contribuciones <span className="text-celeste">a la historia</span>
           </h2>
           <div className="grid grid-cols-3 gap-4 border-y border-bone/10 py-4 lg:border-b-0 lg:pt-7" aria-live="off">
             <div className="flex flex-col gap-1">
