@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { useStore } from "@/lib/store";
-import { cells } from "@/lib/matches";
+import { cells, TOTAL_MATCHES } from "@/lib/matches";
 
 export const PRELOADER_DONE = "207:ready";
 
@@ -21,7 +21,8 @@ export function onReady(cb: () => void) {
   return () => window.removeEventListener(PRELOADER_DONE, cb);
 }
 
-const COLS = 23; // 23 × 9 = 207
+const COLS = 26; // 26 × 8 = 208
+const ROWS = Math.ceil(cells.length / COLS);
 
 /** ¿Se reproduce la intro? Una vez por sesión; /p/n, ?intro=0 y reduced-motion la saltean. Se cachea. */
 export function shouldPlayIntro() {
@@ -51,7 +52,7 @@ function drawCounter(cv: HTMLCanvasElement | null, v: number) {
   ctx.fillText(String(v).padStart(3, "0"), cv.width / 2, 108);
 }
 
-/** Pantalla negra, contador mono 000 → 207 que acelera y se rompe en 207 cuadraditos. */
+/** Pantalla negra, contador mono 000 → 208 que acelera y se rompe en 208 cuadraditos. */
 export function Preloader() {
   const root = useRef<HTMLDivElement>(null);
   const counter = useRef<HTMLCanvasElement>(null);
@@ -84,7 +85,7 @@ export function Preloader() {
         },
       });
       tl.to(state, {
-        v: 207,
+        v: TOTAL_MATCHES,
         duration: 2.1,
         ease: "expo.in",
         onUpdate: () => {
@@ -94,7 +95,7 @@ export function Preloader() {
         .to(".pl-bar", { scaleX: 1, duration: 2.1, ease: "expo.in" }, 0)
         .to(counter.current, { scale: 1.08, duration: 0.18, ease: "power2.out" })
         .to(counter.current, { opacity: 0, scale: 0.9, duration: 0.25, ease: "power2.in" })
-        .to(sq, { opacity: 1, scale: 1, duration: 0.3, stagger: { amount: 0.25, from: "center", grid: [9, COLS] } }, "<")
+        .to(sq, { opacity: 1, scale: 1, duration: 0.3, stagger: { amount: 0.25, from: "center", grid: [ROWS, COLS] } }, "<")
         .add(() => signalReady(), "+=0.05")
         .to(sq, {
           x: () => gsap.utils.random(-window.innerWidth * 0.75, window.innerWidth * 0.75),
@@ -104,7 +105,7 @@ export function Preloader() {
           opacity: 0,
           duration: 1.5,
           ease: "expo.out",
-          stagger: { amount: 0.35, from: "center", grid: [9, COLS] },
+          stagger: { amount: 0.35, from: "center", grid: [ROWS, COLS] },
         })
         .to(root.current, { backgroundColor: "rgba(0,0,0,0)", duration: 1.1, ease: "power2.inOut" }, "<");
       // Mobile: mismo efecto comprimido a < 1 s (la intro completa dura ~4.4 s) para no demorar el LCP.
@@ -147,7 +148,7 @@ export function Preloader() {
           <div className="pl-bar h-px w-full origin-left scale-x-0 bg-celeste" />
         </div>
         <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-bone/40">
-          cargando 207 partidos
+          cargando {TOTAL_MATCHES} partidos
         </p>
       </div>
     </div>

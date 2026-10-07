@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { photos } from "@/data/gallery";
+import { site } from "@/config/site";
 import { matches, formatDate } from "@/lib/matches";
 
 export const metadata: Metadata = {
-  title: "Créditos — 207",
-  description: "Autores, licencias y fuentes de las fotos usadas en 207, el homenaje a Lionel Messi.",
+  title: `Créditos — ${site.name}`,
+  description: `Autores, licencias y fuentes de las fotos usadas en ${site.name}, el homenaje a Lionel Messi.`,
   alternates: { canonical: "/creditos" },
 };
 
@@ -15,11 +16,11 @@ export default function Creditos() {
     <main className="px-gutter mx-auto flex w-full min-h-screen max-w-[1100px] flex-col gap-10 py-16 md:py-24">
       <header className="flex min-w-0 flex-col gap-4">
         <Link href="/" className="font-mono text-xs text-celeste hover:underline">
-          ← 207
+          ← {site.name}
         </Link>
         <h1 className="h-display text-[56px] md:text-[96px]">Créditos</h1>
         <p className="max-w-[640px] font-serif text-xl italic text-bone/75">
-          Fotos de Wikimedia Commons con licencias libres (CC BY y CC BY-SA), salvo una captura de TV sin licencia libre (se indica abajo). Gracias a quienes las sacaron y las compartieron.
+          Fotos de Wikimedia Commons con licencias libres (CC BY y CC BY-SA), salvo una captura de TV sin licencia libre (se indica abajo) y las dos fotos y el video de la tribuna del partido 208, que circulan en redes sin licencia libre ni autor identificado. Gracias a quienes las sacaron y las compartieron.
           Los datos de los partidos vienen de Wikipedia y worldfootball.net.
         </p>
       </header>

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { C, OgGrid, ogFonts } from "@/lib/og";
-import { matches, TOTAL_GOALS } from "@/lib/matches";
+import { matches, TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 import { site } from "@/config/site";
 
 /** Story vertical 1080×1920 para IG / estados de WhatsApp. ?m=176 destaca un partido. */
@@ -22,7 +22,7 @@ export async function GET(req: Request) {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-          <div style={{ display: "flex", fontFamily: "Display", fontSize: 300, lineHeight: 0.76, letterSpacing: -6 }}>207</div>
+          <div style={{ display: "flex", fontFamily: "Display", fontSize: 300, lineHeight: 0.76, letterSpacing: -6 }}>{String(TOTAL_MATCHES)}</div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, fontSize: 26 }}>
             <span style={{ color: C.celeste }}>{`${TOTAL_GOALS} goles`}</span>
             <span style={{ color: "rgba(244,241,234,0.6)" }}>2005—2026</span>

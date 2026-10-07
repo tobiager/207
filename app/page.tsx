@@ -5,7 +5,7 @@ import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "207",
+  name: site.name,
   alternateName: site.title,
   url: site.url,
   inLanguage: "es-AR",

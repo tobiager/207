@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { site } from "@/config/site";
+import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 import "./globals.css";
 
 // Fuentes self-hosted (OFL) — sin requests a Google en runtime, display: swap.
@@ -38,10 +39,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: `${site.title} · Homenaje a Lionel Messi`, template: "%s" },
   description: site.description,
-  applicationName: "207",
+  applicationName: site.name,
   authors: [{ name: site.author, url: site.links.github }],
   creator: site.author,
-  keywords: ["Lionel Messi", "Messi", "Selección Argentina", "207 partidos", "125 goles", "homenaje", "despedida", "Benín", "Mundial 2022", "Copa América"],
+  keywords: ["Lionel Messi", "Messi", "Selección Argentina", `${TOTAL_MATCHES} partidos`, `${TOTAL_GOALS} goles`, "Messi Benín", "último partido de Messi", "homenaje", "despedida", "Benín", "Mundial 2022", "Copa América"],
   alternates: { canonical: "/" },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
   category: "sports",
@@ -49,7 +50,7 @@ export const metadata: Metadata = {
     title: site.title,
     description: "Una carrera entera. Un solo gráfico.",
     url: site.url,
-    siteName: "207",
+    siteName: site.name,
     locale: "es_AR",
     type: "website",
   },

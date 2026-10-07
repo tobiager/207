@@ -75,6 +75,10 @@ export type Chapter = {
   line: string;
   tag: string;
   gold?: boolean;
+  /** Qué se muestra en grande y en el índice (por defecto, el año). */
+  big?: string;
+  /** Clave de foto en chapterImages (por defecto, el año). */
+  photo?: string;
   pick: (m: Match) => boolean;
   image?: MatchImage | null;
 };
@@ -131,6 +135,15 @@ export const chapters: Chapter[] = [
     line: "No hizo falta ganarla para ser eterno.",
     tag: "Mundial 2026",
     pick: (m) => yearOf(m) === 2026 && m.competition === "Mundial",
+  },
+  {
+    year: 2026,
+    title: "La despedida",
+    line: "Monumental. Un gol, dos asistencias. El último cuadradito.",
+    tag: "Partido 208 · Amistoso vs Benín",
+    big: "208",
+    photo: "despedida",
+    pick: (m) => m.n === 208,
   },
 ];
 

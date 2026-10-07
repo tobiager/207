@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
 import { gallery, type GalleryItem } from "@/data/gallery";
-import { site } from "@/config/site";
 import Image from "next/image";
 
 function Item({ it }: { it: GalleryItem }) {
@@ -37,34 +36,6 @@ function PhotoInner({ it }: { it: GalleryItem }) {
   return <Image src={it.image!.src} alt={`${it.year} vs ${it.opponent}`} fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />;
 }
 
-function Embeds() {
-  useEffect(() => {
-    if (!site.embeds.length) return;
-    const add = (src: string) => {
-      if (document.querySelector(`script[src="${src}"]`)) return;
-      const s = document.createElement("script");
-      s.src = src;
-      s.async = true;
-      document.body.appendChild(s);
-    };
-    if (site.embeds.some((e) => e.kind === "instagram")) add("https://www.instagram.com/embed.js");
-    if (site.embeds.some((e) => e.kind === "x")) add("https://platform.twitter.com/widgets.js");
-  }, []);
-  if (!site.embeds.length) return null;
-  return (
-    <div className="mt-16 grid gap-8 md:grid-cols-2">
-      {site.embeds.map((e) =>
-        e.kind === "instagram" ? (
-          <blockquote key={e.url} className="instagram-media" data-instgrm-permalink={e.url} data-instgrm-version="14" />
-        ) : (
-          <blockquote key={e.url} className="twitter-tweet" data-theme="dark">
-            <a href={e.url}>{e.url}</a>
-          </blockquote>
-        ),
-      )}
-    </div>
-  );
-}
 
 export function Gallery() {
   const root = useRef<HTMLElement>(null);
@@ -123,7 +94,6 @@ export function Gallery() {
             </div>
           ))}
         </div>
-        <Embeds />
       </div>
     </section>
   );

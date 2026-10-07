@@ -2763,5 +2763,18 @@
       "href": "https://commons.wikimedia.org/wiki/File:Lionel_Messi_Argentina_v_Spain_19_July_2026-070.jpg"
     },
     "verified": true
+  },
+  {
+    "n": 208,
+    "date": "2026-10-06",
+    "opponent": "Benín",
+    "result": "3-0",
+    "goals": 1,
+    "competition": "Amistoso",
+    "isFinal": false,
+    "won": true,
+    "note": "La despedida, en el Monumental. Gol de penal y dos asistencias: estuvo en los tres goles.",
+    "image": null,
+    "verified": true
   }
 ]

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { matches, formatDate, YEARS, yearOf, type Competition, type Match } from "@/lib/matches";
+import { matches, formatDate, TOTAL_MATCHES, YEARS, yearOf, type Competition, type Match } from "@/lib/matches";
 import { useStore } from "@/lib/store";
 import { matchUrl, nativeShare, shareText } from "@/lib/share";
 import { Photo } from "./Photo";
@@ -59,7 +59,7 @@ function ScoreCard({ m, gold }: { m: Match; gold: boolean }) {
         <span className="font-display text-xl font-bold uppercase tracking-[0.01em] text-bone/80 md:text-2xl">ARG vs {m.opponent}</span>
       </div>
       <span className={`self-end font-mono text-[11px] ${gold ? "text-gold/80" : "text-celeste/80"}`}>
-        #{m.n}/207
+        #{m.n}/{TOTAL_MATCHES}
       </span>
     </div>
   );
