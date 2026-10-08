@@ -64,14 +64,14 @@ body {
 .pl-counter::before { content: attr(data-v); }
 
 /* ---------- Textura: grano + viñeta + reflectores ---------- */
-/* Grano: un WebP chico repetido (antes un feTurbulence SVG a 200% × 200%). Salta de posición cada 200 ms. */
+/* Grano: el mismo ruido fractal de siempre, pero pre-renderizado a un WebP de 220px (antes un feTurbulence SVG en vivo a 200% × 200%). Salta de posición cada 200 ms. */
 .grain {
   position: fixed;
-  inset: -192px;
+  inset: -220px;
   pointer-events: none;
   z-index: 90;
   opacity: 0.09;
-  background: url("/img/grain.webp") 0 0 / 192px 192px;
+  background: url("/img/grain.webp") 0 0 / 220px 220px;
   animation: grain 0.8s steps(1) infinite;
 }
 @keyframes grain {
@@ -132,7 +132,7 @@ html.lite .spotlights span { animation: none; }
   pointer-events: none;
   opacity: 0.22;
   mix-blend-mode: overlay;
-  background: url("/img/grain.webp") 0 0 / 192px 192px;
+  background: url("/img/photo-grain.webp") 0 0 / 160px 160px;
 }
 
 /* ---------- Grid de partidos ---------- */
