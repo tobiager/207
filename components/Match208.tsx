@@ -82,36 +82,28 @@ function XEmbeds() {
   );
 }
 
-/** Video vertical de la tribuna: mudo y en loop mientras está en pantalla; al tocarlo suena. */
-function CrowdVideo() {
-  const c = m.crowd;
+/** Un bloque por video (frase + video vertical), alternando de lado. Mudo y en loop en pantalla; al tocarlo suena. */
+function Videos() {
   return (
-    <div className="lm-crowd grid w-full max-w-[1080px] items-center gap-10 border-t border-bone/10 pt-16 text-left md:grid-cols-[minmax(0,1fr)_minmax(0,380px)] md:gap-16 md:pt-24">
-      <div className="flex flex-col gap-5 md:gap-7">
-        <span className="eyebrow">El Monumental</span>
-        <p className="font-serif text-[40px] italic leading-[1] tracking-[-0.01em] md:text-[64px]">{c.title}</p>
-        <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Tocá el video para escucharlo.</p>
-      </div>
-      <LoopVideo
-        src={c.src}
-        poster={c.poster}
-        label="Video de la tribuna del Monumental coreando a Messi en su despedida"
-        className="mx-auto aspect-[9/16] w-full max-w-[340px] rounded-2xl! border border-celeste/25 shadow-[0_30px_100px_rgb(117_170_219/0.18)]"
-      />
-    </div>
-  );
-}
-
-/** Los otros dos videos, en par, debajo del de la tribuna. */
-function MoreVideos() {
-  return (
-    <div className="grid w-full max-w-[720px] grid-cols-2 gap-3 text-left md:gap-8">
-      {m.videos.map((v) => (
-        <figure key={v.src} className="m-0 flex flex-col gap-2.5">
-          <LoopVideo src={v.src} poster={v.poster} label={v.label} className="aspect-[9/16] w-full rounded-2xl! border border-celeste/25" />
-          <figcaption className="font-serif text-base italic leading-tight text-bone/80 md:text-xl">{v.label}</figcaption>
-        </figure>
-      ))}
+    <div className="flex w-full max-w-[1080px] flex-col gap-20 border-t border-bone/10 pt-16 text-left md:gap-32 md:pt-24">
+      {m.videos.map((v, i) => {
+        const flip = i % 2 === 1;
+        return (
+          <div key={v.src} className={`lm-crowd grid items-center gap-10 md:gap-16 ${flip ? "md:grid-cols-[minmax(0,380px)_minmax(0,1fr)]" : "md:grid-cols-[minmax(0,1fr)_minmax(0,380px)]"}`}>
+            <div className={`flex flex-col gap-5 md:gap-7 ${flip ? "md:order-2" : ""}`}>
+              <span className="eyebrow">{v.eyebrow}</span>
+              <p className="font-serif text-[40px] italic leading-[1] tracking-[-0.01em] md:text-[64px]">{v.title}</p>
+              {i === 0 && <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Tocá el video para escucharlo.</p>}
+            </div>
+            <LoopVideo
+              src={v.src}
+              poster={v.poster}
+              label={v.alt}
+              className="mx-auto aspect-[9/16] w-full max-w-[340px] rounded-2xl! border border-celeste/25 shadow-[0_30px_100px_rgb(117_170_219/0.18)]"
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -263,9 +255,8 @@ export function Match208() {
         })}
       </ol>
 
-      <div className="relative flex w-full flex-col items-center gap-12 md:gap-16">
-        <CrowdVideo />
-        <MoreVideos />
+      <div className="relative flex w-full justify-center">
+        <Videos />
       </div>
 
       <p className="relative max-w-[760px] font-serif text-[28px] italic leading-tight text-bone/80 md:text-[40px]">
