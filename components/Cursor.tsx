@@ -12,10 +12,11 @@ export function Cursor() {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || !window.matchMedia("(pointer: fine)").matches) return;
+    if (!el || !window.matchMedia("(pointer: fine) and (prefers-reduced-motion: no-preference)").matches) return;
     document.documentElement.classList.add("has-cursor");
-    const xTo = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
-    const yTo = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
+    // Casi pegado al mouse: 0.15 s (0.1 s reales con el timeScale global) y solo translate3d.
+    const xTo = gsap.quickTo(el, "x", { duration: 0.15, ease: "power3.out" });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.15, ease: "power3.out" });
 
     const move = (e: PointerEvent) => {
       xTo(e.clientX);

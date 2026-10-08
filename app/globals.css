@@ -215,10 +215,11 @@ body {
   border-radius: 50%;
   background: var(--color-celeste);
   pointer-events: none;
-  mix-blend-mode: normal;
-  transition: width 0.45s var(--ease-expo), height 0.45s var(--ease-expo), margin 0.45s var(--ease-expo),
-    border-radius 0.45s var(--ease-expo), background 0.3s, border-color 0.3s;
+  display: none;
+  transition: width 0.3s var(--ease-expo), height 0.3s var(--ease-expo), margin 0.3s var(--ease-expo),
+    border-radius 0.3s var(--ease-expo), background 0.2s, border-color 0.2s;
 }
+html.has-cursor .cursor { display: block; }
 .cursor[data-mode="grid"] { width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 3px; }
 .cursor[data-mode="grow"] {
   width: 64px;
@@ -227,7 +228,6 @@ body {
   background: rgb(117 170 219 / 0.12);
   border: 1px solid var(--color-celeste);
 }
-@media (pointer: coarse) { .cursor { display: none; } }
 @media (pointer: fine) { html.has-cursor, html.has-cursor * { cursor: none !important; } }
 
 /* ---------- Varios ---------- */
