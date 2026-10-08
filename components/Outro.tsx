@@ -61,9 +61,9 @@ export function Outro() {
         // (antes eran 21 tweens infinitos desde la carga, aunque estuvieran a 20.000 px).
         const cloths = gsap.utils.toArray<HTMLElement>(".cloth");
         const loops = cloths.flatMap((c, i) => [
-          gsap.to(c, { y: gsap.utils.random(-40, -16), duration: gsap.utils.random(3.5, 5.5), ease: "sine.inOut", yoyo: true, repeat: -1, delay: i * 0.3, paused: true }),
-          gsap.to(c, { rotation: `+=${gsap.utils.random(6, 14)}`, duration: gsap.utils.random(4, 7), ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),
-          gsap.to(c.querySelector("path"), { skewX: gsap.utils.random(-8, 8), scaleX: gsap.utils.random(0.86, 0.94), transformOrigin: "0% 50%", duration: gsap.utils.random(0.9, 1.5), ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),
+          gsap.to(c, { y: gsap.utils.random(-40, -16), duration: gsap.utils.random(5, 8), ease: "sine.inOut", yoyo: true, repeat: -1, delay: i * 0.3, paused: true }),
+          gsap.to(c, { rotation: `+=${gsap.utils.random(6, 14)}`, duration: gsap.utils.random(6, 10), ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),
+          gsap.to(c.querySelector("path"), { skewX: gsap.utils.random(-8, 8), scaleX: gsap.utils.random(0.86, 0.94), transformOrigin: "0% 50%", duration: gsap.utils.random(1.4, 2.2), ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),
         ]);
         ScrollTrigger.create({ trigger: root.current, onToggle: (self) => loops.forEach((t) => t.paused(!self.isActive)) });
         // Viento: un quickTo por pañuelo en vez de 7 tweens nuevos por cada pointermove

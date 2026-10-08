@@ -161,7 +161,7 @@ export function MatchGrid() {
       };
       // Con pin: al final exacto (todo pintado, el clímax no se repite). Sin pin (reduced motion): al tope de la sección.
       const y = pin.current ? pin.current.end - 1 : root.current.getBoundingClientRect().top + window.scrollY;
-      if (lenis.current) lenis.current.scrollTo(y, { duration: 1.2, force: true, onComplete: mark });
+      if (lenis.current) lenis.current.scrollTo(y, { duration: 0.9, force: true, onComplete: mark });
       else {
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });

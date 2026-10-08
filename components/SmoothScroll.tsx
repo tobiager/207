@@ -5,13 +5,13 @@ import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useStore } from "@/lib/store";
 
-/** Lenis sincronizado con GSAP ScrollTrigger. */
+/** Lenis sincronizado con GSAP ScrollTrigger (un solo loop: gsap.ticker). En touch, scroll nativo. */
 export function SmoothScroll() {
   const { lenis } = useStore();
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const l = new Lenis({ lerp: 0.085, wheelMultiplier: 0.9, touchMultiplier: 1.4 });
+    if (window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)").matches) return;
+    const l = new Lenis({ lerp: 0.1 });
     lenis.current = l;
     l.on("scroll", ScrollTrigger.update);
     const raf = (time: number) => l.raf(time * 1000);

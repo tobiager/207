@@ -50,7 +50,7 @@ export function Chapters() {
             start: "top top",
             end: () => `+=${distance()}`,
             pin: true,
-            scrub: 0.8,
+            scrub: true,
             invalidateOnRefresh: true,
             anticipatePin: 1,
           },

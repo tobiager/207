@@ -27,7 +27,7 @@ export function Manifesto() {
             y: 0,
             ease: "none",
             stagger: 0.12,
-            scrollTrigger: { trigger: ".manifesto-text", start: "top 78%", end: "bottom 42%", scrub: 0.8 },
+            scrollTrigger: { trigger: ".manifesto-text", start: "top 78%", end: "bottom 42%", scrub: true },
           },
         );
         gsap.fromTo(
