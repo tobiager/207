@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, SplitText } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
 import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 
@@ -35,6 +35,8 @@ export function Manifesto() {
           { xPercent: 0 },
           { xPercent: -18, ease: "none", scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } },
         );
+        // El marquee (CSS) solo corre con la sección en pantalla
+        ScrollTrigger.create({ trigger: root.current, toggleClass: "in-view" });
         return () => split.revert();
   }, root);
 

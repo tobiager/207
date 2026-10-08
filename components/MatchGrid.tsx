@@ -231,7 +231,7 @@ export function MatchGrid() {
             {tip && (
               <div
                 role="tooltip"
-                className="pointer-events-none absolute z-20 w-[230px] -translate-x-1/2 -translate-y-[calc(100%+12px)] rounded-md border bg-night-2/95 px-4 py-3 text-[11px] leading-relaxed shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur"
+                className="pointer-events-none absolute z-20 w-[230px] -translate-x-1/2 -translate-y-[calc(100%+12px)] rounded-md border bg-night-2/95 px-4 py-3 text-[11px] leading-relaxed shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
                 style={{
                   left: Math.min(Math.max(tip.x, 115), (gridRef.current?.clientWidth ?? 400) - 115),
                   top: tip.y,

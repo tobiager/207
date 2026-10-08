@@ -77,7 +77,7 @@ export function Hero() {
           style={{ fontSize: "clamp(220px, 46vw, 680px)" }}
           aria-label={`${TOTAL_MATCHES} partidos de Lionel Messi con la Selección Argentina`}
         >
-          <span aria-hidden="true" className="pointer-events-none absolute -inset-x-[10%] -inset-y-[20%] -z-10 bg-[radial-gradient(ellipse_at_40%_55%,rgb(117_170_219/0.28),transparent_65%)] blur-2xl" />
+          <span aria-hidden="true" className="pointer-events-none absolute -inset-x-[10%] -inset-y-[20%] -z-10 bg-[radial-gradient(ellipse_at_40%_55%,rgb(117_170_219/0.28),transparent_65%)]" />
           {String(TOTAL_MATCHES).split("").map((d, i) => (
             <span key={i} className="inline-block align-bottom [clip-path:inset(-5%_-10%_0_-10%)]">
               <span className="hero-digit inline-block">{d}</span>
