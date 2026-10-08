@@ -85,12 +85,3 @@ export const chapterImages: Record<string | number, MatchImage | null> = {
   // Messi hablándole al Monumental en la despedida. Sin línea de crédito; la cara queda en el tercio superior.
   despedida: { src: "/img/x-despedida.webp", credit: "", license: "", position: "50% 14%" },
 };
-
-/** Videos que acompañan a un capítulo (clave = título del capítulo). Se sirven desde /public. */
-export type ChapterVideo = { src: string; poster: string; label: string };
-export const chapterVideos: Record<string, ChapterVideo[]> = {
-  "La última final": [
-    { src: "/video/ch07-cancha.mp4", poster: "/img/ch07-cancha-poster.webp", label: "Messi en la cancha, después de la final" },
-    { src: "/video/ch07-colectivo.mp4", poster: "/img/ch07-colectivo-poster.webp", label: "El plantel le canta en el colectivo para que se quede" },
-  ],
-};

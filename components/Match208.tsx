@@ -86,6 +86,20 @@ function CrowdVideo() {
   );
 }
 
+/** Los otros dos videos, en par, debajo del de la tribuna. */
+function MoreVideos() {
+  return (
+    <div className="grid w-full max-w-[720px] grid-cols-2 gap-3 text-left md:gap-8">
+      {m.videos.map((v) => (
+        <figure key={v.src} className="m-0 flex flex-col gap-2.5">
+          <LoopVideo src={v.src} poster={v.poster} label={v.label} className="aspect-[9/16] w-full rounded-2xl! border border-celeste/25" />
+          <figcaption className="font-serif text-base italic leading-tight text-bone/80 md:text-xl">{v.label}</figcaption>
+        </figure>
+      ))}
+    </div>
+  );
+}
+
 /** Foto con el tratamiento duotono de la web; recupera el color con hover o tap. */
 function QuotePhoto({ src, alt }: { src: string; alt: string }) {
   const [color, setColor] = useState(false);
@@ -233,8 +247,9 @@ export function Match208() {
         })}
       </ol>
 
-      <div className="relative flex w-full justify-center">
+      <div className="relative flex w-full flex-col items-center gap-12 md:gap-16">
         <CrowdVideo />
+        <MoreVideos />
       </div>
 
       <p className="relative max-w-[760px] font-serif text-[28px] italic leading-tight text-bone/80 md:text-[40px]">

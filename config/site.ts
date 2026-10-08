@@ -39,6 +39,11 @@ export const site = {
       poster: "/img/monumental-canta-poster.webp",
       title: "Un estadio entero cantando su nombre.",
     },
+    /** Otros dos videos verticales, debajo del de la tribuna. */
+    videos: [
+      { src: "/video/ch07-cancha.mp4", poster: "/img/ch07-cancha-poster.webp", label: "Messi en la cancha" },
+      { src: "/video/ch07-colectivo.mp4", poster: "/img/ch07-colectivo-poster.webp", label: "El plantel le canta en el colectivo para que se quede" },
+    ],
     /** Posts de X con video del partido. Se muestran con el embed oficial de X (con el autor visible). */
     embeds: ["https://x.com/messismo10/status/2107672622162960554"],
     /** Frase + fotos que cierran la sección del partido 208. */
