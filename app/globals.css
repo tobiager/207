@@ -251,13 +251,17 @@ html.has-cursor .cursor { display: block; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee { animation: marquee 70s linear infinite paused; }
 .in-view .marquee { animation-play-state: running; }
-@keyframes cue {
-  0% { transform: scaleY(0); transform-origin: top; }
-  50% { transform: scaleY(1); transform-origin: top; }
-  51% { transform-origin: bottom; }
-  100% { transform: scaleY(0); transform-origin: bottom; }
+/* La línea entra por arriba y sale por abajo solo con translate (antes animaba transform-origin:
+   no era componible y forzaba un recálculo de estilos por frame, siempre). */
+@keyframes cue { from { transform: translateY(-101%); } to { transform: translateY(101%); } }
+.scroll-cue { position: relative; overflow: hidden; }
+.scroll-cue::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-celeste);
+  animation: cue 2.2s cubic-bezier(0.77, 0, 0.18, 1) infinite;
 }
-.scroll-cue { animation: cue 2.2s cubic-bezier(0.77, 0, 0.18, 1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 .caret { animation: blink 1s steps(1) infinite; }
 .outline-text { color: transparent; -webkit-text-stroke: 1px rgb(117 170 219 / 0.2); }

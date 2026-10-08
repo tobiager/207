@@ -98,7 +98,7 @@ export function Hero() {
             </div>
             <div className="flex flex-col items-center gap-2.5 text-[10px] tracking-[0.2em] text-bone/50" aria-hidden="true">
               <span>SCROLL</span>
-              <span className="scroll-cue block h-14 w-px bg-celeste" />
+              <span className="scroll-cue block h-14 w-px" />
             </div>
           </div>
         </div>
