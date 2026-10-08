@@ -108,14 +108,14 @@ export function Chapters() {
                 aria-label={`${c.year}: ${c.title}`}
               >
                 <div className="ch-photo absolute -inset-x-[14%] inset-y-0">
-                  <Photo image={img} alt={`${c.title}, ${c.year}`} credit="none" sizes="90vw" className="h-full" />
+                  <Photo image={img} alt={`${c.title}, ${c.year}`} credit="none" sizes="(min-width: 768px) 100vw, 110vw" className="h-full" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-night via-night/30 to-night/10" />
                 <span className="absolute left-4 top-4 font-mono text-[10px] uppercase tracking-[0.16em] text-bone/70 md:left-9 md:top-7 md:text-[11px]">
                   Capítulo {String(i + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")} · {c.title}
                 </span>
                 <span className="absolute right-4 top-4 hidden font-mono text-[10px] text-bone/55 md:right-9 md:top-7 md:block">
-                  {img ? `${img.credit} · ${img.license}` : ""}
+                  {img?.credit ? `${img.credit} · ${img.license}` : ""}
                 </span>
                 <div className="absolute inset-x-4 bottom-5 flex flex-wrap items-end justify-between gap-6 md:inset-x-9 md:bottom-9 md:gap-8">
                   <div className="flex flex-col gap-3 overflow-hidden">

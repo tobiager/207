@@ -22,7 +22,7 @@ export function Photo({ image, alt, className = "", sizes = "100vw", priority, c
     <figure className="m-0 flex h-full flex-col gap-2">
       <div className={`duotone photo-grain relative flex-1 ${className}`}>
         {image ? (
-          <Image src={image.src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" />
+          <Image src={image.src} alt={alt} fill sizes={sizes} priority={priority} className="object-cover" style={{ objectPosition: image.position }} />
         ) : (
           <div className="duotone-placeholder" role="img" aria-label={`${alt} (foto pendiente)`} />
         )}

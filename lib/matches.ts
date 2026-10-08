@@ -7,7 +7,7 @@ export type Competition =
   | "Mundial"
   | "Finalissima";
 
-export type MatchImage = { src: string; credit: string; license: string; href?: string };
+export type MatchImage = { src: string; credit: string; license: string; href?: string; /** object-position del recorte. */ position?: string };
 
 export type Match = {
   n: number;
