@@ -36,7 +36,7 @@ const Cells = memo(function Cells({
       data-final={finalAttr(c)}
       data-hit={highlight?.has(c.n) ? "true" : undefined}
       data-active={active === c.n ? "true" : undefined}
-      style={{ "--c": c.col, "--r": c.row, "--i": c.n - 1 } as CSSProperties}
+      style={{ "--c": c.col, "--r": c.row } as CSSProperties}
       aria-label={`#${c.n} · ${c.date} · vs ${c.opponent} · ${c.result} · ${c.goals} goles · ${c.competition}`}
       onPointerEnter={(e) => e.pointerType === "mouse" && onShow(e.currentTarget, c)}
       onClick={(e) => {
@@ -75,7 +75,8 @@ export function MatchGrid() {
 
   useLazyGSAP(() => {
         const grid = gridRef.current!;
-        const golds = gsap.utils.toArray<HTMLElement>('.cell[data-final="won"]', grid);
+        const els = gsap.utils.toArray<HTMLElement>(".cell", grid);
+        const golds = els.filter((c) => c.dataset.final === "won");
         let climaxed = false;
 
         const setCounters = (i: number) => {
@@ -85,14 +86,18 @@ export function MatchGrid() {
         };
         setCounters(0);
 
-        // Pintado por CSS: una sola variable --p (partidos pintados) en vez de un tween por partido.
+        // Pintado: cada frame solo se tocan las celdas que cambian (data-on) y el pop lo hace una
+        // transición CSS de transform/opacity. Antes una variable --p recalculaba las 208 por frame.
         grid.dataset.anim = "true";
         const state = { p: 0 };
+        let shown = 0;
         const paint = () => {
-          grid.style.setProperty("--p", state.p.toFixed(2));
-          setCounters(Math.min(TOTAL_MATCHES, Math.max(0, Math.floor(state.p))));
+          const n = Math.min(TOTAL_MATCHES, Math.max(0, Math.floor(state.p)));
+          if (n === shown) return;
+          for (; shown < n; shown++) els[shown].dataset.on = "";
+          for (; shown > n; shown--) delete els[shown - 1].dataset.on;
+          setCounters(n);
         };
-        paint();
 
         pin.current = gsap.to(state, {
           p: TOTAL_MATCHES + 2,
@@ -103,16 +108,12 @@ export function MatchGrid() {
             start: "top top",
             end: () => `+=${window.innerHeight * 2.4}`,
             pin: true,
-            scrub: 0.6,
+            scrub: true,
             anticipatePin: 1,
             onUpdate: (self) => {
               if (self.progress > 0.93 && !climaxed) {
                 climaxed = true;
-                gsap.fromTo(
-                  golds,
-                  { scale: 2.2, boxShadow: "0 0 60px rgba(201,164,76,1)" },
-                  { scale: 1, boxShadow: "0 0 18px rgba(201,164,76,.6)", duration: 1.4, ease: "expo.out", stagger: 0.12, clearProps: "transform,boxShadow" },
-                );
+                gsap.fromTo(golds, { scale: 2.2 }, { scale: 1, duration: 1.4, ease: "expo.out", stagger: 0.12, clearProps: "transform" });
                 gsap.fromTo(".grid-flash", { opacity: 0.5 }, { opacity: 0, duration: 1.6, ease: "power2.out" });
               }
               if (self.progress < 0.85) climaxed = false;
@@ -122,7 +123,7 @@ export function MatchGrid() {
         return () => {
           pin.current = null;
           delete grid.dataset.anim;
-          grid.style.removeProperty("--p");
+          els.forEach((c) => delete c.dataset.on);
         };
   }, root);
 
@@ -159,7 +160,7 @@ export function MatchGrid() {
         }, SPOT_MS);
       };
       // Con pin: al final exacto (todo pintado, el clímax no se repite). Sin pin (reduced motion): al tope de la sección.
-      const y = pin.current ? pin.current.end - 2 : root.current.getBoundingClientRect().top + window.scrollY;
+      const y = pin.current ? pin.current.end - 1 : root.current.getBoundingClientRect().top + window.scrollY;
       if (lenis.current) lenis.current.scrollTo(y, { duration: 1.2, force: true, onComplete: mark });
       else {
         const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
