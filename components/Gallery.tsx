@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { isLite } from "@/lib/lite";
 import { gallery, type GalleryItem } from "@/data/gallery";
 import Image from "next/image";
 
@@ -42,18 +43,21 @@ export function Gallery() {
 
   useLazyGSAP(() => {
         // Parallax a distintas velocidades por columna
-        gsap.utils.toArray<HTMLElement>(".g-col").forEach((col, i) => {
+        (isLite() ? [] : gsap.utils.toArray<HTMLElement>(".g-col")).forEach((col, i) => {
           const speed = [-6, 10, -14][i % 3];
           gsap.fromTo(col, { yPercent: -speed }, { yPercent: speed, ease: "none", scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } });
         });
-        // Reveal con clip-path
-        gsap.utils.toArray<HTMLElement>(".g-clip").forEach((el) => {
-          gsap.fromTo(
-            el,
-            { clipPath: "inset(100% 0% 0% 0%)" },
-            { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } },
-          );
-          gsap.fromTo(el.firstElementChild, { scale: 1.3 }, { scale: 1, duration: 2, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+        // Reveal solo con transform/opacity y un batch para toda la galería (antes: clip-path y dos triggers por foto)
+        const clips = gsap.utils.toArray<HTMLElement>(".g-clip");
+        gsap.set(clips, { opacity: 0, y: 60 });
+        gsap.set(clips.map((el) => el.firstElementChild), { scale: 1.2 });
+        ScrollTrigger.batch(clips, {
+          start: "top 88%",
+          once: true,
+          onEnter: (els) => {
+            gsap.to(els, { opacity: 1, y: 0, duration: 1.6, ease: "expo.out", stagger: 0.08 });
+            gsap.to(els.map((el) => el.firstElementChild), { scale: 1, duration: 2, ease: "expo.out", stagger: 0.08 });
+          },
         });
   }, root);
 

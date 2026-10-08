@@ -63,26 +63,25 @@ body {
 
 .pl-counter::before { content: attr(data-v); }
 
-/* ---------- Textura: grano animado + viñeta + reflectores ---------- */
+/* ---------- Textura: grano + viñeta + reflectores ---------- */
+/* Grano: el mismo ruido fractal de siempre, pero pre-renderizado a un WebP de 220px (antes un feTurbulence SVG en vivo a 200% × 200%). Salta de posición cada 200 ms. */
 .grain {
   position: fixed;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
+  inset: -220px;
   pointer-events: none;
   z-index: 90;
   opacity: 0.09;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  animation: grain 0.9s steps(6) infinite;
+  background: url("/img/grain.webp") 0 0 / 220px 220px;
+  animation: grain 0.8s steps(1) infinite;
 }
 @keyframes grain {
   0% { transform: translate(0, 0); }
-  20% { transform: translate(-6%, 4%); }
-  40% { transform: translate(4%, -8%); }
-  60% { transform: translate(-9%, -3%); }
-  80% { transform: translate(7%, 6%); }
-  100% { transform: translate(0, 0); }
+  25% { transform: translate(-37px, 53px); }
+  50% { transform: translate(61px, -29px); }
+  75% { transform: translate(-83px, -71px); }
 }
+html.lite .grain { display: none; }
+html.lite .spotlights span { animation: none; }
 .vignette {
   position: fixed;
   inset: 0;
@@ -97,8 +96,6 @@ body {
   height: 70vmax;
   border-radius: 50%;
   background: radial-gradient(circle, rgb(117 170 219 / 0.13), transparent 62%);
-  filter: blur(20px);
-  will-change: transform;
 }
 .spotlights span:nth-child(1) { left: -25vmax; top: -30vmax; animation: drift1 26s ease-in-out infinite; }
 .spotlights span:nth-child(2) { right: -30vmax; top: 20vh; animation: drift2 34s ease-in-out infinite; }
@@ -108,7 +105,7 @@ body {
 
 /* ---------- Fotos: duotono #07111F → #75AADB ---------- */
 .duotone { position: relative; overflow: hidden; background: var(--color-celeste); isolation: isolate; }
-.duotone img { filter: grayscale(1) contrast(1.15) brightness(1.05); mix-blend-mode: multiply; transition: filter 0.9s var(--ease-expo), opacity 0.9s; }
+.duotone img { filter: grayscale(1) contrast(1.15) brightness(1.05); mix-blend-mode: multiply; transition: filter 0.6s var(--ease-expo), opacity 0.6s; }
 .duotone::after {
   content: "";
   position: absolute;
@@ -116,7 +113,7 @@ body {
   background: var(--color-night);
   mix-blend-mode: lighten;
   pointer-events: none;
-  transition: opacity 0.9s var(--ease-expo);
+  transition: opacity 0.6s var(--ease-expo);
 }
 .duotone.is-color img { filter: none; mix-blend-mode: normal; }
 .duotone.is-color::after { opacity: 0; }
@@ -135,7 +132,7 @@ body {
   pointer-events: none;
   opacity: 0.22;
   mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background: url("/img/photo-grain.webp") 0 0 / 160px 160px;
 }
 
 /* ---------- Grid de partidos ---------- */
@@ -179,15 +176,29 @@ body {
 .cell[data-final="lost"] { background: var(--color-slate); box-shadow: inset 0 0 0 1px #46546a; }
 .cell[data-final="won"] { background: var(--color-gold); box-shadow: 0 0 18px rgb(201 164 76 / 0.6); }
 .match-grid[data-anim] .cell {
-  --t: clamp(0, calc((var(--p, 0) - var(--i)) / 1.5), 1);
-  opacity: var(--t);
-  transform: scale(var(--t));
-  border-radius: calc(3px + (1 - var(--t)) * 50%);
-  transition: none;
+  opacity: 0;
+  transform: scale(0.2);
+  transition: opacity 0.25s, transform 0.4s var(--ease-expo), filter 0.4s, outline-color 0.2s;
 }
+.match-grid[data-anim] .cell[data-on] { opacity: 1; transform: none; }
 .cell:hover, .cell:focus-visible, .cell[data-active="true"] { outline-color: var(--color-bone); }
 .match-grid[data-filtering="true"] .cell:not([data-hit="true"]) { filter: saturate(0) brightness(0.28); box-shadow: none; }
 .match-grid[data-filtering="true"] .cell[data-hit="true"] { outline-color: rgb(244 241 234 / 0.6); }
+/* "Ver en el gráfico": ring celeste + pulso corto (solo transform/opacity) */
+.cell[data-spot] { position: relative; z-index: 1; outline: 2px solid var(--color-celeste); outline-offset: 2px; filter: none !important; }
+.cell[data-spot]::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 2px solid var(--color-celeste);
+  border-radius: 6px;
+  opacity: 0;
+  animation: spot-ring 0.9s var(--ease-expo) 3;
+}
+@keyframes spot-ring {
+  from { transform: scale(0.8); opacity: 0.9; }
+  to { transform: scale(2.6); opacity: 0; }
+}
 
 /* ---------- Cursor ---------- */
 .cursor {
@@ -201,10 +212,11 @@ body {
   border-radius: 50%;
   background: var(--color-celeste);
   pointer-events: none;
-  mix-blend-mode: normal;
-  transition: width 0.45s var(--ease-expo), height 0.45s var(--ease-expo), margin 0.45s var(--ease-expo),
-    border-radius 0.45s var(--ease-expo), background 0.3s, border-color 0.3s;
+  display: none;
+  transition: width 0.3s var(--ease-expo), height 0.3s var(--ease-expo), margin 0.3s var(--ease-expo),
+    border-radius 0.3s var(--ease-expo), background 0.2s, border-color 0.2s;
 }
+html.has-cursor .cursor { display: block; }
 .cursor[data-mode="grid"] { width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 3px; }
 .cursor[data-mode="grow"] {
   width: 64px;
@@ -213,8 +225,17 @@ body {
   background: rgb(117 170 219 / 0.12);
   border: 1px solid var(--color-celeste);
 }
-@media (pointer: coarse) { .cursor { display: none; } }
 @media (pointer: fine) { html.has-cursor, html.has-cursor * { cursor: none !important; } }
+
+/* ---------- Embed de X ---------- */
+/* Sin esto el iframe pinta esquinas blancas (la página es color-scheme: dark y el tweet no). */
+.x-embeds iframe { color-scheme: light; border-radius: 12px; }
+.x-embeds .twitter-tweet { margin: 0 auto !important; }
+/* Con mouse, el iframe no recibe eventos hasta que se hace clic en la tarjeta: si no, la rueda
+   sobre el tweet se saltea a Lenis y la página scrollea a los saltos. */
+@media (pointer: fine) {
+  .x-embeds:not([data-live]) iframe { pointer-events: none; }
+}
 
 /* ---------- Varios ---------- */
 @keyframes heartbeat {
@@ -243,14 +264,19 @@ body {
 }
 .live-dot { animation: live-dot 1.4s ease-in-out infinite; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.marquee { animation: marquee 70s linear infinite; }
-@keyframes cue {
-  0% { transform: scaleY(0); transform-origin: top; }
-  50% { transform: scaleY(1); transform-origin: top; }
-  51% { transform-origin: bottom; }
-  100% { transform: scaleY(0); transform-origin: bottom; }
+.marquee { animation: marquee 70s linear infinite paused; }
+.in-view .marquee { animation-play-state: running; }
+/* La línea entra por arriba y sale por abajo solo con translate (antes animaba transform-origin:
+   no era componible y forzaba un recálculo de estilos por frame, siempre). */
+@keyframes cue { from { transform: translateY(-101%); } to { transform: translateY(101%); } }
+.scroll-cue { position: relative; overflow: hidden; }
+.scroll-cue::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-celeste);
+  animation: cue 2.2s cubic-bezier(0.77, 0, 0.18, 1) infinite;
 }
-.scroll-cue { animation: cue 2.2s cubic-bezier(0.77, 0, 0.18, 1) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 .caret { animation: blink 1s steps(1) infinite; }
 .outline-text { color: transparent; -webkit-text-stroke: 1px rgb(117 170 219 / 0.2); }

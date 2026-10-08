@@ -33,12 +33,30 @@ export const site = {
       { min: 62, scorer: "Nico Paz", how: "zurdazo", messi: "asistencia" },
       { min: 71, scorer: "Messi", how: "de penal", messi: "gol 126" },
     ],
-    /** Video vertical de la tribuna coreando a Messi (se sirve desde /public). */
-    crowd: {
-      src: "/video/monumental-canta.mp4",
-      poster: "/img/monumental-canta-poster.webp",
-      title: "Un estadio entero cantando su nombre.",
-    },
+    /** Videos verticales (se sirven desde /public). Un bloque por video, alternando lados. */
+    videos: [
+      {
+        eyebrow: "El Monumental",
+        title: "Un estadio entero cantando su nombre.",
+        src: "/video/monumental-canta.mp4",
+        poster: "/img/monumental-canta-poster.webp",
+        alt: "Video de la tribuna del Monumental coreando a Messi en su despedida",
+      },
+      {
+        eyebrow: "El colectivo",
+        title: "El plantel, cantándole para que se quede.",
+        src: "/video/ch07-colectivo.mp4",
+        poster: "/img/ch07-colectivo-poster.webp",
+        alt: "Video del plantel cantándole a Messi en el colectivo para que se quede",
+      },
+      {
+        eyebrow: "La cancha",
+        title: "Una vez más, solo frente a su gente.",
+        src: "/video/ch07-cancha.mp4",
+        poster: "/img/ch07-cancha-poster.webp",
+        alt: "Video de Messi en la cancha durante su despedida",
+      },
+    ],
     /** Posts de X con video del partido. Se muestran con el embed oficial de X (con el autor visible). */
     embeds: ["https://x.com/messismo10/status/2107672622162960554"],
     /** Frase + fotos que cierran la sección del partido 208. */

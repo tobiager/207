@@ -6,6 +6,7 @@ import { gsap } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
 import { site } from "@/config/site";
 import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
+import { LoopVideo } from "./LoopVideo";
 
 const m = site.lastMatch;
 const isLeo = (scorer: string) => scorer === "Messi";
@@ -13,6 +14,7 @@ const isLeo = (scorer: string) => scorer === "Messi";
 /** Carga widgets.js de X recién cuando la sección se acerca al viewport (no pesa en el LCP). */
 function XEmbeds() {
   const box = useRef<HTMLDivElement>(null);
+  const [live, setLive] = useState(false);
 
   useEffect(() => {
     const el = box.current;
@@ -45,89 +47,63 @@ function XEmbeds() {
   if (!m.embeds.length) return null;
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-3 border-t border-bone/10 pt-8 text-left">
-        <span className="eyebrow">La despedida, en video</span>
-        <span className="max-w-[360px] font-mono text-[10px] leading-relaxed text-bone/45 md:text-[11px]">
-          Video de su autor, con el embed oficial de X.
-        </span>
+    <div className="grid w-full items-center gap-10 border-t border-bone/10 pt-16 text-left md:grid-cols-[minmax(0,520px)_minmax(0,1fr)] md:gap-16 md:pt-24">
+      {/* Tarjeta con la estética del sitio; adentro, el embed oficial. Clic = se puede interactuar con el tweet. */}
+      <div
+        ref={box}
+        data-live={live ? "" : undefined}
+        data-cursor={live ? undefined : "grow"}
+        onClick={() => setLive(true)}
+        onPointerLeave={() => setLive(false)}
+        className="x-embeds group relative order-2 flex min-h-[420px] w-full items-center justify-center rounded-2xl border border-celeste/25 bg-night-2/60 p-2 shadow-[0_30px_100px_rgb(117_170_219/0.18)] md:order-1 md:p-3"
+      >
+        <div className="w-full">
+          {m.embeds.map((url) => (
+            <blockquote key={url} className="twitter-tweet" data-theme="dark" data-dnt="true" data-lang="es" data-align="center" data-conversation="none">
+              <a href={url} target="_blank" rel="noreferrer" className="font-mono text-xs text-celeste underline-offset-2 hover:underline">
+                Ver en X → {url.replace(/^https:\/\/x\.com\//, "@").replace(/\/status\/.*/, "")}
+              </a>
+            </blockquote>
+          ))}
+        </div>
+        {!live && (
+          <span className="pointer-events-none absolute -bottom-4 left-1/2 hidden -translate-x-1/2 items-center whitespace-nowrap gap-2 rounded-full border border-bone/25 bg-night/80 px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-bone opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:text-[11px] [@media(pointer:fine)]:flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-celeste" />
+            Clic para reproducir
+          </span>
+        )}
       </div>
-      <div ref={box} className="x-embeds mx-auto w-full max-w-[550px]">
-        {m.embeds.map((url) => (
-          <blockquote key={url} className="twitter-tweet" data-theme="dark" data-dnt="true" data-align="center" data-conversation="none">
-            <a href={url} target="_blank" rel="noreferrer" className="font-mono text-xs text-celeste underline-offset-2 hover:underline">
-              Ver en X → {url.replace(/^https:\/\/x\.com\//, "@").replace(/\/status\/.*/, "")}
-            </a>
-          </blockquote>
-        ))}
+      <div className="order-1 flex flex-col gap-5 md:order-2 md:gap-7">
+        <span className="eyebrow">La despedida, en video</span>
+        <p className="font-serif text-[40px] italic leading-[1] tracking-[-0.01em] md:text-[64px]">Simplemente gracias.</p>
+        <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Video de su autor, con el embed oficial de X.</p>
       </div>
     </div>
   );
 }
 
-/** Video vertical de la tribuna: arranca mudo y en loop cuando entra en pantalla; el botón activa el sonido. */
-function CrowdVideo() {
-  const c = m.crowd;
-  const ref = useRef<HTMLVideoElement>(null);
-  const [muted, setMuted] = useState(true);
-
-  useEffect(() => {
-    const v = ref.current;
-    if (!v) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          v.preload = "auto";
-          v.play().catch(() => {});
-        } else v.pause();
-      },
-      { threshold: 0.35 },
-    );
-    io.observe(v);
-    return () => io.disconnect();
-  }, []);
-
-  const toggle = () => {
-    const v = ref.current;
-    if (!v) return;
-    v.muted = !v.muted;
-    setMuted(v.muted);
-    if (!v.muted) {
-      v.currentTime = 0;
-      v.play().catch(() => {});
-    }
-  };
-
+/** Un bloque por video (frase + video vertical), alternando de lado. Mudo y en loop en pantalla; al tocarlo suena. */
+function Videos() {
   return (
-    <div className="lm-crowd grid w-full max-w-[1080px] items-center gap-10 border-t border-bone/10 pt-16 text-left md:grid-cols-[minmax(0,1fr)_minmax(0,380px)] md:gap-16 md:pt-24">
-      <div className="flex flex-col gap-5 md:gap-7">
-        <span className="eyebrow">El Monumental</span>
-        <p className="font-serif text-[40px] italic leading-[1] tracking-[-0.01em] md:text-[64px]">{c.title}</p>
-        <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Tocá el video para escucharlo.</p>
-      </div>
-      <button
-        type="button"
-        onClick={toggle}
-        className="group relative mx-auto block aspect-[9/16] w-full max-w-[340px] overflow-hidden rounded-2xl border border-celeste/25 shadow-[0_30px_100px_rgb(117_170_219/0.18)]"
-        aria-label={muted ? "Activar sonido del video" : "Silenciar video"}
-      >
-        <video
-          ref={ref}
-          className="absolute inset-0 h-full w-full object-cover"
-          src={c.src}
-          poster={c.poster}
-          muted
-          loop
-          playsInline
-          preload="none"
-          aria-label="Video de la tribuna del Monumental coreando a Messi en su despedida"
-        />
-        <span className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-night/80 to-transparent" />
-        <span className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-bone/25 bg-night/60 px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-bone backdrop-blur transition-colors duration-300 group-hover:border-celeste md:text-[11px]">
-          <span className={`h-1.5 w-1.5 rounded-full ${muted ? "bg-bone/50" : "live-dot bg-celeste"}`} />
-          {muted ? "Activar sonido" : "Sonando"}
-        </span>
-      </button>
+    <div className="flex w-full max-w-[1080px] flex-col gap-20 border-t border-bone/10 pt-16 text-left md:gap-32 md:pt-24">
+      {m.videos.map((v, i) => {
+        const flip = i % 2 === 1;
+        return (
+          <div key={v.src} className={`lm-crowd grid items-center gap-10 md:gap-16 ${flip ? "md:grid-cols-[minmax(0,380px)_minmax(0,1fr)]" : "md:grid-cols-[minmax(0,1fr)_minmax(0,380px)]"}`}>
+            <div className={`flex flex-col gap-5 md:gap-7 ${flip ? "md:order-2" : ""}`}>
+              <span className="eyebrow">{v.eyebrow}</span>
+              <p className="font-serif text-[40px] italic leading-[1] tracking-[-0.01em] md:text-[64px]">{v.title}</p>
+              {i === 0 && <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Tocá el video para escucharlo.</p>}
+            </div>
+            <LoopVideo
+              src={v.src}
+              poster={v.poster}
+              label={v.alt}
+              className="mx-auto aspect-[9/16] w-full max-w-[340px] rounded-2xl! border border-celeste/25 shadow-[0_30px_100px_rgb(117_170_219/0.18)]"
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -179,8 +155,8 @@ export function Match208() {
     const st = { trigger: root.current, start: "top 70%" };
     gsap.fromTo(
       ".lm-square",
-      { scale: 0.6, opacity: 0, boxShadow: "0 0 0 rgb(117 170 219 / 0)" },
-      { scale: 1, opacity: 1, boxShadow: "0 0 100px rgb(117 170 219 / 0.6)", duration: 1.6, ease: "expo.out", scrollTrigger: st },
+      { scale: 0.6, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 1.6, ease: "expo.out", scrollTrigger: st },
     );
     gsap.fromTo(".lm-bar", { scaleX: 0 }, { scaleX: 1, duration: 1.8, ease: "power3.inOut", scrollTrigger: { trigger: ".lm-timeline", start: "top 80%" } });
     gsap.from(".lm-dot", {
@@ -192,9 +168,9 @@ export function Match208() {
       delay: 0.6,
       scrollTrigger: { trigger: ".lm-timeline", start: "top 80%" },
     });
-    gsap.from(".lm-quote-text", { y: 40, opacity: 0, filter: "blur(10px)", duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: ".lm-quote", start: "top 75%" } });
+    gsap.from(".lm-quote-text", { y: 40, opacity: 0, duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: ".lm-quote", start: "top 75%" } });
     gsap.utils.toArray<HTMLElement>(".lm-photo").forEach((el) => {
-      gsap.fromTo(el, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+      gsap.from(el, { y: 60, opacity: 0, duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } });
     });
     gsap.from(".lm-goal", { y: 18, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.12, scrollTrigger: { trigger: ".lm-goals", start: "top 85%" } });
   }, root);
@@ -280,7 +256,7 @@ export function Match208() {
       </ol>
 
       <div className="relative flex w-full justify-center">
-        <CrowdVideo />
+        <Videos />
       </div>
 
       <p className="relative max-w-[760px] font-serif text-[28px] italic leading-tight text-bone/80 md:text-[40px]">
@@ -289,7 +265,7 @@ export function Match208() {
         <span className="text-celeste">El último cuadradito, pintado.</span>
       </p>
 
-      <div className="relative w-full max-w-[1344px]">
+      <div className="relative w-full max-w-[1080px]">
         <XEmbeds />
       </div>
 

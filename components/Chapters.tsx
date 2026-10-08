@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { isLite } from "@/lib/lite";
 import { chapters, matches } from "@/lib/matches";
 import { chapterImages } from "@/data/gallery";
 import { Photo } from "./Photo";
@@ -49,7 +50,7 @@ export function Chapters() {
             start: "top top",
             end: () => `+=${distance()}`,
             pin: true,
-            scrub: 0.8,
+            scrub: true,
             invalidateOnRefresh: true,
             anticipatePin: 1,
           },
@@ -60,12 +61,14 @@ export function Chapters() {
           scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${distance()}`, scrub: true },
         });
 
+        const lite = isLite();
         gsap.utils.toArray<HTMLElement>(".ch-panel").forEach((panel) => {
-          gsap.fromTo(
-            panel.querySelector(".ch-photo"),
-            { xPercent: -12 },
-            { xPercent: 12, ease: "none", scrollTrigger: { trigger: panel, containerAnimation: tween, start: "left right", end: "right left", scrub: true } },
-          );
+          if (!lite)
+            gsap.fromTo(
+              panel.querySelector(".ch-photo"),
+              { xPercent: -12 },
+              { xPercent: 12, ease: "none", scrollTrigger: { trigger: panel, containerAnimation: tween, start: "left right", end: "right left", scrub: true } },
+            );
           gsap.from(panel.querySelectorAll(".ch-reveal"), {
             yPercent: 40,
             opacity: 0,
@@ -101,6 +104,7 @@ export function Chapters() {
           {chapters.map((c, i) => {
             const picked = new Set(matches.filter(c.pick).map((m) => m.n));
             const img = chapterImages[c.photo ?? c.year];
+            const num = `${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`;
             return (
               <article
                 key={c.title}
@@ -108,14 +112,14 @@ export function Chapters() {
                 aria-label={`${c.year}: ${c.title}`}
               >
                 <div className="ch-photo absolute -inset-x-[14%] inset-y-0">
-                  <Photo image={img} alt={`${c.title}, ${c.year}`} credit="none" sizes="90vw" className="h-full" />
+                  <Photo image={img} alt={`${c.title}, ${c.year}`} credit="none" sizes="(min-width: 768px) 100vw, 110vw" className="h-full" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-night via-night/30 to-night/10" />
                 <span className="absolute left-4 top-4 font-mono text-[10px] uppercase tracking-[0.16em] text-bone/70 md:left-9 md:top-7 md:text-[11px]">
-                  Capítulo {String(i + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")} · {c.title}
+                  Capítulo {num} · {c.title}
                 </span>
                 <span className="absolute right-4 top-4 hidden font-mono text-[10px] text-bone/55 md:right-9 md:top-7 md:block">
-                  {img ? `${img.credit} · ${img.license}` : ""}
+                  {img?.credit ? `${img.credit} · ${img.license}` : ""}
                 </span>
                 <div className="absolute inset-x-4 bottom-5 flex flex-wrap items-end justify-between gap-6 md:inset-x-9 md:bottom-9 md:gap-8">
                   <div className="flex flex-col gap-3 overflow-hidden">

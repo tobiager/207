@@ -31,7 +31,7 @@ export function StoreProvider({ children, initialMatch }: { children: ReactNode;
       scrollTo: (target, offset = 0) => {
         const el = typeof target === "string" ? document.querySelector<HTMLElement>(target) : target;
         if (!el) return;
-        if (lenis.current) lenis.current.scrollTo(el, { offset, duration: 1.6, force: true });
+        if (lenis.current) lenis.current.scrollTo(el, { offset, duration: 1, force: true });
         else window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + offset, behavior: "smooth" });
       },
     }),

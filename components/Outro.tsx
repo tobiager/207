@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { gsap, SplitText } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { isLite } from "@/lib/lite";
 import { TITLES, TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 import { site } from "@/config/site";
 import { useStore } from "@/lib/store";
@@ -39,7 +40,6 @@ export function Outro() {
           yPercent: 120,
           rotateX: -80,
           opacity: 0,
-          filter: "blur(10px)",
           duration: 1.8,
           ease: "expo.out",
           stagger: 0.07,
@@ -57,22 +57,29 @@ export function Outro() {
           });
         });
 
-        // Pañuelos: flotan y se agitan con física suave
-        const cloths = gsap.utils.toArray<HTMLElement>(".cloth");
-        cloths.forEach((c, i) => {
-          gsap.to(c, { y: gsap.utils.random(-40, -16), duration: gsap.utils.random(3.5, 5.5), ease: "sine.inOut", yoyo: true, repeat: -1, delay: i * 0.3 });
-          gsap.to(c, { rotation: `+=${gsap.utils.random(6, 14)}`, duration: gsap.utils.random(4, 7), ease: "sine.inOut", yoyo: true, repeat: -1 });
-          const p = c.querySelector("path");
-          gsap.to(p, { skewX: gsap.utils.random(-8, 8), scaleX: gsap.utils.random(0.86, 0.94), transformOrigin: "0% 50%", duration: gsap.utils.random(0.9, 1.5), ease: "sine.inOut", yoyo: true, repeat: -1 });
-        });
+        // Pañuelos: flotan y se agitan. Los loops arrancan pausados y solo corren con la sección en pantalla
+        // (antes eran 21 tweens infinitos desde la carga, aunque estuvieran a 20.000 px).
+        const cloths = isLite() ? [] : gsap.utils.toArray<HTMLElement>(".cloth");
+        const loops = cloths.flatMap((c, i) => [
+          gsap.to(c, { y: gsap.utils.random(-40, -16), duration: gsap.utils.random(5, 8), ease: "sine.inOut", yoyo: true, repeat: -1, delay: i * 0.3, paused: true }),
+          gsap.to(c, { rotation: `+=${gsap.utils.random(6, 14)}`, duration: gsap.utils.random(6, 10), ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),
+          gsap.to(c.querySelector("path"), { skewX: gsap.utils.random(-8, 8), scaleX: gsap.utils.random(0.86, 0.94), transformOrigin: "0% 50%", duration: gsap.utils.random(1.4, 2.2), ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),
+        ]);
+        ScrollTrigger.create({ trigger: root.current, onToggle: (self) => loops.forEach((t) => t.paused(!self.isActive)) });
+        // Viento: un quickTo por pañuelo en vez de 7 tweens nuevos por cada pointermove
+        const blow = cloths.map((c) => [gsap.quickTo(c, "x", { duration: 2.2, ease: "power3.out" }), gsap.quickTo(c, "skewY", { duration: 2.2, ease: "power3.out" })]);
         const wind = (e: PointerEvent) => {
           const nx = e.clientX / window.innerWidth - 0.5;
-          cloths.forEach((c, i) => gsap.to(c, { x: nx * (40 + i * 8), skewY: nx * 6, duration: 2.2, ease: "power3.out", overwrite: "auto" }));
+          blow.forEach(([x, skew], i) => {
+            x(nx * (40 + i * 8));
+            skew(nx * 6);
+          });
         };
-        root.current?.addEventListener("pointermove", wind);
+        const el = root.current;
+        el?.addEventListener("pointermove", wind, { passive: true });
         return () => {
           split.revert();
-          root.current?.removeEventListener("pointermove", wind);
+          el?.removeEventListener("pointermove", wind);
         };
   }, root);
 
@@ -87,7 +94,6 @@ export function Outro() {
             <path
               d="M8 18 C 30 4, 58 22, 84 8 C 98 2, 108 10, 114 6 C 110 34, 118 58, 112 86 C 86 96, 60 80, 34 94 C 22 98, 12 92, 4 96 C 10 70, 2 44, 8 18 Z"
               fill={`rgb(244 241 234 / ${c.o})`}
-              style={{ filter: "blur(0.6px)" }}
             />
           </svg>
         ))}

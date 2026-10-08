@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, SplitText } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { isLite } from "@/lib/lite";
 import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 
 const LINES = [
@@ -20,21 +21,22 @@ export function Manifesto() {
         const split = SplitText.create(".manifesto-text", { type: "words", wordsClass: "mword", aria: "none" });
         gsap.fromTo(
           split.words,
-          { opacity: 0.12, filter: "blur(6px)", y: 8 },
+          { opacity: 0.12, y: 8 },
           {
             opacity: 1,
-            filter: "blur(0px)",
             y: 0,
             ease: "none",
             stagger: 0.12,
-            scrollTrigger: { trigger: ".manifesto-text", start: "top 78%", end: "bottom 42%", scrub: 0.8 },
+            scrollTrigger: { trigger: ".manifesto-text", start: "top 78%", end: "bottom 42%", scrub: true },
           },
         );
-        gsap.fromTo(
+        if (!isLite()) gsap.fromTo(
           ".manifesto-marquee",
           { xPercent: 0 },
           { xPercent: -18, ease: "none", scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } },
         );
+        // El marquee (CSS) solo corre con la sección en pantalla
+        ScrollTrigger.create({ trigger: root.current, toggleClass: "in-view" });
         return () => split.revert();
   }, root);
 

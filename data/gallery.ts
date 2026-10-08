@@ -82,6 +82,6 @@ export const chapterImages: Record<string | number, MatchImage | null> = {
   2022: byFile("x-champ"),
   2024: byFile("x-sorteo"),
   2026: byFile("m207"),
-  // Sin foto libre del partido 208 todavía: se usa una de 2026. Reemplazar cuando haya una en Commons.
-  despedida: byFile("m204"),
+  // Messi hablándole al Monumental en la despedida. Sin línea de crédito; la cara queda en el tercio superior.
+  despedida: { src: "/img/x-despedida.webp", credit: "", license: "", position: "50% 14%" },
 };

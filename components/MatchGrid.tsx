@@ -1,12 +1,51 @@
 "use client";
 
-import { useCallback, useRef, useState, type CSSProperties } from "react";
-import { gsap } from "@/lib/gsap";
+import { memo, useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
 import { useStore } from "@/lib/store";
 import { cells, cumulativeGoals, formatDate, MAX_ROWS, TOTAL_GOALS, TOTAL_MATCHES, YEARS, yearOf, type Cell } from "@/lib/matches";
 
 const finalAttr = (c: Cell) => (c.isFinal ? (c.won ? "won" : "lost") : undefined);
+
+/** "Ver en el gráfico": lleva al grid y resalta el cuadradito del partido n. */
+export const SPOT_EVENT = "208:spot";
+export const spotMatch = (n: number) => window.dispatchEvent(new CustomEvent(SPOT_EVENT, { detail: n }));
+const SPOT_MS = 4500;
+
+/** Los 208 cuadraditos. Memo: el tooltip y el resaltado no los vuelven a renderizar. */
+const Cells = memo(function Cells({
+  highlight,
+  active,
+  onShow,
+  onPick,
+}: {
+  highlight: Set<number> | null;
+  active: number | null;
+  onShow: (el: HTMLElement, c: Cell) => void;
+  onPick: (n: number) => void;
+}) {
+  return cells.map((c) => (
+    <button
+      key={c.n}
+      type="button"
+      tabIndex={-1}
+      className="cell"
+      data-n={c.n}
+      data-l={c.level}
+      data-final={finalAttr(c)}
+      data-hit={highlight?.has(c.n) ? "true" : undefined}
+      data-active={active === c.n ? "true" : undefined}
+      style={{ "--c": c.col, "--r": c.row } as CSSProperties}
+      aria-label={`#${c.n} · ${c.date} · vs ${c.opponent} · ${c.result} · ${c.goals} goles · ${c.competition}`}
+      onPointerEnter={(e) => e.pointerType === "mouse" && onShow(e.currentTarget, c)}
+      onClick={(e) => {
+        onShow(e.currentTarget, c);
+        onPick(c.n);
+      }}
+    />
+  ));
+});
 
 function Legend() {
   return (
@@ -30,12 +69,14 @@ export function MatchGrid() {
   const cMatches = useRef<HTMLSpanElement>(null);
   const cGoals = useRef<HTMLSpanElement>(null);
   const cYears = useRef<HTMLSpanElement>(null);
-  const { highlight, active, setActive } = useStore();
+  const { highlight, active, setActive, lenis } = useStore();
   const [tip, setTip] = useState<{ c: Cell; x: number; y: number } | null>(null);
+  const pin = useRef<ScrollTrigger | null>(null);
 
   useLazyGSAP(() => {
         const grid = gridRef.current!;
-        const golds = gsap.utils.toArray<HTMLElement>('.cell[data-final="won"]', grid);
+        const els = gsap.utils.toArray<HTMLElement>(".cell", grid);
+        const golds = els.filter((c) => c.dataset.final === "won");
         let climaxed = false;
 
         const setCounters = (i: number) => {
@@ -45,16 +86,20 @@ export function MatchGrid() {
         };
         setCounters(0);
 
-        // Pintado por CSS: una sola variable --p (partidos pintados) en vez de un tween por partido.
+        // Pintado: cada frame solo se tocan las celdas que cambian (data-on) y el pop lo hace una
+        // transición CSS de transform/opacity. Antes una variable --p recalculaba las 208 por frame.
         grid.dataset.anim = "true";
         const state = { p: 0 };
+        let shown = 0;
         const paint = () => {
-          grid.style.setProperty("--p", state.p.toFixed(2));
-          setCounters(Math.min(TOTAL_MATCHES, Math.max(0, Math.floor(state.p))));
+          const n = Math.min(TOTAL_MATCHES, Math.max(0, Math.floor(state.p)));
+          if (n === shown) return;
+          for (; shown < n; shown++) els[shown].dataset.on = "";
+          for (; shown > n; shown--) delete els[shown - 1].dataset.on;
+          setCounters(n);
         };
-        paint();
 
-        gsap.to(state, {
+        pin.current = gsap.to(state, {
           p: TOTAL_MATCHES + 2,
           ease: "none",
           onUpdate: paint,
@@ -63,25 +108,22 @@ export function MatchGrid() {
             start: "top top",
             end: () => `+=${window.innerHeight * 2.4}`,
             pin: true,
-            scrub: 0.6,
+            scrub: true,
             anticipatePin: 1,
             onUpdate: (self) => {
               if (self.progress > 0.93 && !climaxed) {
                 climaxed = true;
-                gsap.fromTo(
-                  golds,
-                  { scale: 2.2, boxShadow: "0 0 60px rgba(201,164,76,1)" },
-                  { scale: 1, boxShadow: "0 0 18px rgba(201,164,76,.6)", duration: 1.4, ease: "expo.out", stagger: 0.12, clearProps: "transform,boxShadow" },
-                );
+                gsap.fromTo(golds, { scale: 2.2 }, { scale: 1, duration: 1.4, ease: "expo.out", stagger: 0.12, clearProps: "transform" });
                 gsap.fromTo(".grid-flash", { opacity: 0.5 }, { opacity: 0, duration: 1.6, ease: "power2.out" });
               }
               if (self.progress < 0.85) climaxed = false;
             },
           },
-        });
+        }).scrollTrigger!;
         return () => {
+          pin.current = null;
           delete grid.dataset.anim;
-          grid.style.removeProperty("--p");
+          els.forEach((c) => delete c.dataset.on);
         };
   }, root);
 
@@ -92,6 +134,46 @@ export function MatchGrid() {
     const r = el.getBoundingClientRect();
     setTip({ c, x: r.left - gr.left + r.width / 2, y: r.top - gr.top });
   }, []);
+
+  // Resaltado por data-attribute directo en la celda (sin estado: no re-renderiza el grid).
+  useEffect(() => {
+    let cell: HTMLElement | null = null;
+    let timer: number | undefined;
+    const clear = () => {
+      window.clearTimeout(timer);
+      if (cell) delete cell.dataset.spot;
+      cell = null;
+    };
+    const onSpot = (e: Event) => {
+      const n = (e as CustomEvent<number>).detail;
+      const el = gridRef.current?.querySelector<HTMLElement>(`.cell[data-n="${n}"]`);
+      const c = cells[n - 1];
+      if (!el || !c || !root.current) return;
+      clear();
+      const mark = () => {
+        cell = el;
+        el.dataset.spot = "true";
+        show(el, c);
+        timer = window.setTimeout(() => {
+          clear();
+          setTip((t) => (t?.c.n === n ? null : t));
+        }, SPOT_MS);
+      };
+      // Con pin: al final exacto (todo pintado, el clímax no se repite). Sin pin (reduced motion): al tope de la sección.
+      const y = pin.current ? pin.current.end - 1 : root.current.getBoundingClientRect().top + window.scrollY;
+      if (lenis.current) lenis.current.scrollTo(y, { duration: 0.9, force: true, onComplete: mark });
+      else {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top: y, behavior: reduce ? "auto" : "smooth" });
+        timer = window.setTimeout(mark, reduce ? 0 : 700);
+      }
+    };
+    window.addEventListener(SPOT_EVENT, onSpot);
+    return () => {
+      window.removeEventListener(SPOT_EVENT, onSpot);
+      clear();
+    };
+  }, [lenis, show]);
 
   const gridStyle = { "--cols": YEARS.length, "--rows": MAX_ROWS } as CSSProperties;
 
@@ -144,30 +226,12 @@ export function MatchGrid() {
                 &apos;{String(y).slice(2)}
               </span>
             ))}
-            {cells.map((c) => (
-              <button
-                key={c.n}
-                type="button"
-                tabIndex={-1}
-                className="cell"
-                data-l={c.level}
-                data-final={finalAttr(c)}
-                data-hit={highlight?.has(c.n) ? "true" : undefined}
-                data-active={active === c.n ? "true" : undefined}
-                style={{ "--c": c.col, "--r": c.row, "--i": c.n - 1 } as CSSProperties}
-                aria-label={`#${c.n} · ${c.date} · vs ${c.opponent} · ${c.result} · ${c.goals} goles · ${c.competition}`}
-                onPointerEnter={(e) => e.pointerType === "mouse" && show(e.currentTarget, c)}
-                onClick={(e) => {
-                  show(e.currentTarget, c);
-                  setActive(c.n);
-                }}
-              />
-            ))}
+            <Cells highlight={highlight} active={active} onShow={show} onPick={setActive} />
 
             {tip && (
               <div
                 role="tooltip"
-                className="pointer-events-none absolute z-20 w-[230px] -translate-x-1/2 -translate-y-[calc(100%+12px)] rounded-md border bg-night-2/95 px-4 py-3 text-[11px] leading-relaxed shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur"
+                className="pointer-events-none absolute z-20 w-[230px] -translate-x-1/2 -translate-y-[calc(100%+12px)] rounded-md border bg-night-2/95 px-4 py-3 text-[11px] leading-relaxed shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
                 style={{
                   left: Math.min(Math.max(tip.x, 115), (gridRef.current?.clientWidth ?? 400) - 115),
                   top: tip.y,

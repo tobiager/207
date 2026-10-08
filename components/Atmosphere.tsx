@@ -1,4 +1,4 @@
-/** Grano de film animado, viñeta y reflectores celestes que se mueven lento. */
+/** Grano de film, viñeta y reflectores celestes que se mueven lento. */
 export function Atmosphere() {
   return (
     <>
