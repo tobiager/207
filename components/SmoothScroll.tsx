@@ -4,12 +4,14 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useStore } from "@/lib/store";
+import { isLite } from "@/lib/lite";
 
 /** Lenis sincronizado con GSAP ScrollTrigger (un solo loop: gsap.ticker). En touch, scroll nativo. */
 export function SmoothScroll() {
   const { lenis } = useStore();
 
   useEffect(() => {
+    document.documentElement.classList.toggle("lite", isLite());
     if (window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)").matches) return;
     const l = new Lenis({ lerp: 0.1 });
     lenis.current = l;

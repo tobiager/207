@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { isLite } from "@/lib/lite";
 import { gallery, type GalleryItem } from "@/data/gallery";
 import Image from "next/image";
 
@@ -42,7 +43,7 @@ export function Gallery() {
 
   useLazyGSAP(() => {
         // Parallax a distintas velocidades por columna
-        gsap.utils.toArray<HTMLElement>(".g-col").forEach((col, i) => {
+        (isLite() ? [] : gsap.utils.toArray<HTMLElement>(".g-col")).forEach((col, i) => {
           const speed = [-6, 10, -14][i % 3];
           gsap.fromTo(col, { yPercent: -speed }, { yPercent: speed, ease: "none", scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } });
         });

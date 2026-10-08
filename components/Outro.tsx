@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { isLite } from "@/lib/lite";
 import { TITLES, TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 import { site } from "@/config/site";
 import { useStore } from "@/lib/store";
@@ -58,7 +59,7 @@ export function Outro() {
 
         // Pañuelos: flotan y se agitan. Los loops arrancan pausados y solo corren con la sección en pantalla
         // (antes eran 21 tweens infinitos desde la carga, aunque estuvieran a 20.000 px).
-        const cloths = gsap.utils.toArray<HTMLElement>(".cloth");
+        const cloths = isLite() ? [] : gsap.utils.toArray<HTMLElement>(".cloth");
         const loops = cloths.flatMap((c, i) => [
           gsap.to(c, { y: gsap.utils.random(-40, -16), duration: gsap.utils.random(5, 8), ease: "sine.inOut", yoyo: true, repeat: -1, delay: i * 0.3, paused: true }),
           gsap.to(c, { rotation: `+=${gsap.utils.random(6, 14)}`, duration: gsap.utils.random(6, 10), ease: "sine.inOut", yoyo: true, repeat: -1, paused: true }),

@@ -80,6 +80,8 @@ body {
   50% { transform: translate(61px, -29px); }
   75% { transform: translate(-83px, -71px); }
 }
+html.lite .grain { display: none; }
+html.lite .spotlights span { animation: none; }
 .vignette {
   position: fixed;
   inset: 0;
@@ -246,11 +248,6 @@ html.has-cursor .cursor { display: block; }
   animation: heartbeat-ring 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 .heartbeat-fast, .heartbeat-fast::after { animation-duration: 0.85s; }
-@keyframes live-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
-}
-.live-dot { animation: live-dot 1.4s ease-in-out infinite; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee { animation: marquee 70s linear infinite paused; }
 .in-view .marquee { animation-play-state: running; }

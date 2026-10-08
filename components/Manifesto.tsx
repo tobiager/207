@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { isLite } from "@/lib/lite";
 import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
 
 const LINES = [
@@ -29,7 +30,7 @@ export function Manifesto() {
             scrollTrigger: { trigger: ".manifesto-text", start: "top 78%", end: "bottom 42%", scrub: true },
           },
         );
-        gsap.fromTo(
+        if (!isLite()) gsap.fromTo(
           ".manifesto-marquee",
           { xPercent: 0 },
           { xPercent: -18, ease: "none", scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: true } },

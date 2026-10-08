@@ -3,6 +3,7 @@
 import { Fragment, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
+import { isLite } from "@/lib/lite";
 import { chapters, matches } from "@/lib/matches";
 import { chapterImages, chapterVideos } from "@/data/gallery";
 import { Photo } from "./Photo";
@@ -61,12 +62,14 @@ export function Chapters() {
           scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${distance()}`, scrub: true },
         });
 
+        const lite = isLite();
         gsap.utils.toArray<HTMLElement>(".ch-panel").forEach((panel) => {
-          gsap.fromTo(
-            panel.querySelector(".ch-photo"),
-            { xPercent: -12 },
-            { xPercent: 12, ease: "none", scrollTrigger: { trigger: panel, containerAnimation: tween, start: "left right", end: "right left", scrub: true } },
-          );
+          if (!lite)
+            gsap.fromTo(
+              panel.querySelector(".ch-photo"),
+              { xPercent: -12 },
+              { xPercent: 12, ease: "none", scrollTrigger: { trigger: panel, containerAnimation: tween, start: "left right", end: "right left", scrub: true } },
+            );
           gsap.from(panel.querySelectorAll(".ch-reveal"), {
             yPercent: 40,
             opacity: 0,

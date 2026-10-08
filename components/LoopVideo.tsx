@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { isLite } from "@/lib/lite";
 import { PlayIcon, SoundIcon } from "./icons";
 
 /** Al activar el sonido de un video, los demás se mutean. */
@@ -10,8 +11,8 @@ type Props = { src: string; poster: string; label: string; className?: string };
 
 /**
  * Video mudo y en loop que solo reproduce mientras está en pantalla (y con la pestaña visible).
- * El botón del parlante activa el sonido de a uno por vez. Con prefers-reduced-motion no hay
- * autoplay: queda el póster con un botón de play.
+ * El botón del parlante activa el sonido de a uno por vez. Con prefers-reduced-motion o en modo
+ * liviano no hay autoplay: queda el póster con un botón de play.
  */
 export function LoopVideo({ src, poster, label, className = "" }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -22,7 +23,7 @@ export function LoopVideo({ src, poster, label, className = "" }: Props) {
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    const auto = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const auto = !isLite() && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setManual(!auto);
     let inView = false;
     const mute = () => {
