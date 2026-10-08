@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { isLite } from "@/lib/lite";
-import { PlayIcon, SoundIcon } from "./icons";
 
 /** Al activar el sonido de un video, los demás se mutean. */
 const SOUND_EVENT = "208:sound";
@@ -11,7 +10,7 @@ type Props = { src: string; poster: string; label: string; className?: string };
 
 /**
  * Video mudo y en loop que solo reproduce mientras está en pantalla (y con la pestaña visible).
- * El botón del parlante activa el sonido de a uno por vez. Con prefers-reduced-motion o en modo
+ * Tocar el video activa el sonido, de a uno por vez. Con prefers-reduced-motion o en modo
  * liviano no hay autoplay: queda el póster con un botón de play.
  */
 export function LoopVideo({ src, poster, label, className = "" }: Props) {
@@ -46,7 +45,11 @@ export function LoopVideo({ src, poster, label, className = "" }: Props) {
       { threshold: 0.35 },
     );
     io.observe(v);
-    const onSound = (e: Event) => (e as CustomEvent).detail !== v && mute();
+    const onSound = (e: Event) => {
+      if ((e as CustomEvent).detail === v) return;
+      mute();
+      if (!auto) v.pause();
+    };
     window.addEventListener(SOUND_EVENT, onSound);
     document.addEventListener("visibilitychange", sync);
     return () => {
@@ -56,22 +59,25 @@ export function LoopVideo({ src, poster, label, className = "" }: Props) {
     };
   }, []);
 
-  const toggleSound = () => {
+  // Tocar el video activa/silencia el sonido (y lo reinicia). Sin autoplay, el toque reproduce/pausa.
+  const toggle = () => {
     const v = ref.current;
     if (!v) return;
-    v.muted = !v.muted;
+    if (manual && !v.paused) return v.pause();
+    v.muted = manual ? false : !v.muted;
     setMuted(v.muted);
     if (!v.muted) {
       window.dispatchEvent(new CustomEvent(SOUND_EVENT, { detail: v }));
-      v.play().catch(() => {});
+      if (!manual) v.currentTime = 0;
     }
+    v.play().catch(() => {});
   };
 
-  const round =
-    "absolute flex items-center justify-center rounded-full border border-bone/25 bg-night/70 text-bone transition-colors duration-300 hover:border-celeste hover:text-celeste";
+  const on = manual ? playing : !muted;
+  const text = manual ? (playing ? "Pausar" : "Reproducir") : muted ? "Activar sonido" : "Sonando";
 
   return (
-    <div className={`relative overflow-hidden rounded bg-night-2 ${className}`}>
+    <button type="button" onClick={toggle} aria-label={`${text}: ${label}`} className={`group relative block overflow-hidden rounded bg-night-2 ${className}`}>
       <video
         ref={ref}
         className="absolute inset-0 h-full w-full object-cover"
@@ -81,34 +87,14 @@ export function LoopVideo({ src, poster, label, className = "" }: Props) {
         loop
         playsInline
         preload="none"
-        aria-label={label}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       />
-      <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-night/80 to-transparent" />
-      {manual && (
-        <button
-          type="button"
-          onClick={() => (playing ? ref.current?.pause() : ref.current?.play().catch(() => {}))}
-          className="absolute inset-0 flex items-center justify-center"
-          aria-label={playing ? `Pausar: ${label}` : `Reproducir: ${label}`}
-        >
-          {!playing && (
-            <span className={`${round} relative h-14 w-14`}>
-              <PlayIcon />
-            </span>
-          )}
-        </button>
-      )}
-      <button
-        type="button"
-        onClick={toggleSound}
-        aria-pressed={!muted}
-        aria-label={muted ? `Activar sonido: ${label}` : `Silenciar: ${label}`}
-        className={`${round} bottom-3 left-3 h-11 w-11 ${muted ? "" : "border-celeste text-celeste"}`}
-      >
-        <SoundIcon on={!muted} />
-      </button>
-    </div>
+      <span className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-night/80 to-transparent" />
+      <span className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-bone/25 bg-night/70 px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-bone transition-colors duration-300 group-hover:border-celeste md:text-[11px]">
+        <span className={`h-1.5 w-1.5 rounded-full ${on ? "live-dot bg-celeste" : "bg-bone/50"}`} />
+        {text}
+      </span>
+    </button>
   );
 }

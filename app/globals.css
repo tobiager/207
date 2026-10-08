@@ -227,6 +227,16 @@ html.has-cursor .cursor { display: block; }
 }
 @media (pointer: fine) { html.has-cursor, html.has-cursor * { cursor: none !important; } }
 
+/* ---------- Embed de X ---------- */
+/* Sin esto el iframe pinta esquinas blancas (la página es color-scheme: dark y el tweet no). */
+.x-embeds iframe { color-scheme: light; border-radius: 12px; }
+.x-embeds .twitter-tweet { margin: 0 auto !important; }
+/* Con mouse, el iframe no recibe eventos hasta que se hace clic en la tarjeta: si no, la rueda
+   sobre el tweet se saltea a Lenis y la página scrollea a los saltos. */
+@media (pointer: fine) {
+  .x-embeds:not([data-live]) iframe { pointer-events: none; }
+}
+
 /* ---------- Varios ---------- */
 @keyframes heartbeat {
   0%, 100% { transform: scale(1); }
@@ -248,6 +258,11 @@ html.has-cursor .cursor { display: block; }
   animation: heartbeat-ring 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 .heartbeat-fast, .heartbeat-fast::after { animation-duration: 0.85s; }
+@keyframes live-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+.live-dot { animation: live-dot 1.4s ease-in-out infinite; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee { animation: marquee 70s linear infinite paused; }
 .in-view .marquee { animation-play-state: running; }

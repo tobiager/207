@@ -14,6 +14,7 @@ const isLeo = (scorer: string) => scorer === "Messi";
 /** Carga widgets.js de X recién cuando la sección se acerca al viewport (no pesa en el LCP). */
 function XEmbeds() {
   const box = useRef<HTMLDivElement>(null);
+  const [live, setLive] = useState(false);
 
   useEffect(() => {
     const el = box.current;
@@ -46,27 +47,42 @@ function XEmbeds() {
   if (!m.embeds.length) return null;
 
   return (
-    <div className="flex w-full flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-3 border-t border-bone/10 pt-8 text-left">
-        <span className="eyebrow">La despedida, en video</span>
-        <span className="max-w-[360px] font-mono text-[10px] leading-relaxed text-bone/45 md:text-[11px]">
-          Video de su autor, con el embed oficial de X.
-        </span>
+    <div className="grid w-full items-center gap-10 border-t border-bone/10 pt-16 text-left md:grid-cols-[minmax(0,520px)_minmax(0,1fr)] md:gap-16 md:pt-24">
+      {/* Tarjeta con la estética del sitio; adentro, el embed oficial. Clic = se puede interactuar con el tweet. */}
+      <div
+        ref={box}
+        data-live={live ? "" : undefined}
+        data-cursor={live ? undefined : "grow"}
+        onClick={() => setLive(true)}
+        onPointerLeave={() => setLive(false)}
+        className="x-embeds group relative order-2 flex min-h-[420px] w-full items-center justify-center rounded-2xl border border-celeste/25 bg-night-2/60 p-2 shadow-[0_30px_100px_rgb(117_170_219/0.18)] md:order-1 md:p-3"
+      >
+        <div className="w-full">
+          {m.embeds.map((url) => (
+            <blockquote key={url} className="twitter-tweet" data-theme="dark" data-dnt="true" data-lang="es" data-align="center" data-conversation="none">
+              <a href={url} target="_blank" rel="noreferrer" className="font-mono text-xs text-celeste underline-offset-2 hover:underline">
+                Ver en X → {url.replace(/^https:\/\/x\.com\//, "@").replace(/\/status\/.*/, "")}
+              </a>
+            </blockquote>
+          ))}
+        </div>
+        {!live && (
+          <span className="pointer-events-none absolute -bottom-4 left-1/2 hidden -translate-x-1/2 items-center whitespace-nowrap gap-2 rounded-full border border-bone/25 bg-night/80 px-3.5 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-bone opacity-0 transition-opacity duration-300 group-hover:opacity-100 md:text-[11px] [@media(pointer:fine)]:flex">
+            <span className="h-1.5 w-1.5 rounded-full bg-celeste" />
+            Clic para reproducir
+          </span>
+        )}
       </div>
-      <div ref={box} className="x-embeds mx-auto w-full max-w-[550px]">
-        {m.embeds.map((url) => (
-          <blockquote key={url} className="twitter-tweet" data-theme="dark" data-dnt="true" data-align="center" data-conversation="none">
-            <a href={url} target="_blank" rel="noreferrer" className="font-mono text-xs text-celeste underline-offset-2 hover:underline">
-              Ver en X → {url.replace(/^https:\/\/x\.com\//, "@").replace(/\/status\/.*/, "")}
-            </a>
-          </blockquote>
-        ))}
+      <div className="order-1 flex flex-col gap-5 md:order-2 md:gap-7">
+        <span className="eyebrow">La despedida, en video</span>
+        <p className="font-serif text-[40px] italic leading-[1] tracking-[-0.01em] md:text-[64px]">Simplemente gracias.</p>
+        <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Video de su autor, con el embed oficial de X.</p>
       </div>
     </div>
   );
 }
 
-/** Video vertical de la tribuna: mudo y en loop mientras está en pantalla; el parlante activa el sonido. */
+/** Video vertical de la tribuna: mudo y en loop mientras está en pantalla; al tocarlo suena. */
 function CrowdVideo() {
   const c = m.crowd;
   return (
@@ -74,7 +90,7 @@ function CrowdVideo() {
       <div className="flex flex-col gap-5 md:gap-7">
         <span className="eyebrow">El Monumental</span>
         <p className="font-serif text-[40px] italic leading-[1] tracking-[-0.01em] md:text-[64px]">{c.title}</p>
-        <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Tocá el parlante para escucharlo.</p>
+        <p className="max-w-[420px] font-mono text-[11px] leading-relaxed text-bone/55 md:text-xs">Tocá el video para escucharlo.</p>
       </div>
       <LoopVideo
         src={c.src}
@@ -258,7 +274,7 @@ export function Match208() {
         <span className="text-celeste">El último cuadradito, pintado.</span>
       </p>
 
-      <div className="relative w-full max-w-[1344px]">
+      <div className="relative w-full max-w-[1080px]">
         <XEmbeds />
       </div>
 

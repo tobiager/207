@@ -44,16 +44,3 @@ export const Heart = ({ className }: { className?: string }) => (
     <path d="M12 21l-1.7-1.5C4.2 14 0 10.3 0 5.8 0 2.5 2.6 0 5.9 0c1.9 0 3.6.9 4.8 2.2L12 3.6l1.3-1.4C14.5.9 16.2 0 18.1 0 21.4 0 24 2.5 24 5.8c0 4.5-4.2 8.2-10.3 13.7z" fill="#75AADB" />
   </svg>
 );
-
-export const SoundIcon = ({ size = 18, className, on }: P & { on: boolean }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={className}>
-    <path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor" />
-    {on ? <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" /> : <path d="m16 9 6 6m0-6-6 6" />}
-  </svg>
-);
-
-export const PlayIcon = ({ size = 20, className }: P) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
-    <path d="M8 5v14l11-7z" />
-  </svg>
-);
