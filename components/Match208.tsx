@@ -179,8 +179,8 @@ export function Match208() {
     const st = { trigger: root.current, start: "top 70%" };
     gsap.fromTo(
       ".lm-square",
-      { scale: 0.6, opacity: 0, boxShadow: "0 0 0 rgb(117 170 219 / 0)" },
-      { scale: 1, opacity: 1, boxShadow: "0 0 100px rgb(117 170 219 / 0.6)", duration: 1.6, ease: "expo.out", scrollTrigger: st },
+      { scale: 0.6, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 1.6, ease: "expo.out", scrollTrigger: st },
     );
     gsap.fromTo(".lm-bar", { scaleX: 0 }, { scaleX: 1, duration: 1.8, ease: "power3.inOut", scrollTrigger: { trigger: ".lm-timeline", start: "top 80%" } });
     gsap.from(".lm-dot", {
@@ -192,9 +192,9 @@ export function Match208() {
       delay: 0.6,
       scrollTrigger: { trigger: ".lm-timeline", start: "top 80%" },
     });
-    gsap.from(".lm-quote-text", { y: 40, opacity: 0, filter: "blur(10px)", duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: ".lm-quote", start: "top 75%" } });
+    gsap.from(".lm-quote-text", { y: 40, opacity: 0, duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: ".lm-quote", start: "top 75%" } });
     gsap.utils.toArray<HTMLElement>(".lm-photo").forEach((el) => {
-      gsap.fromTo(el, { clipPath: "inset(100% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+      gsap.from(el, { y: 60, opacity: 0, duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } });
     });
     gsap.from(".lm-goal", { y: 18, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.12, scrollTrigger: { trigger: ".lm-goals", start: "top 85%" } });
   }, root);

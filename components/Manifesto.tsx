@@ -20,10 +20,9 @@ export function Manifesto() {
         const split = SplitText.create(".manifesto-text", { type: "words", wordsClass: "mword", aria: "none" });
         gsap.fromTo(
           split.words,
-          { opacity: 0.12, filter: "blur(6px)", y: 8 },
+          { opacity: 0.12, y: 8 },
           {
             opacity: 1,
-            filter: "blur(0px)",
             y: 0,
             ease: "none",
             stagger: 0.12,

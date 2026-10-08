@@ -39,7 +39,6 @@ export function Outro() {
           yPercent: 120,
           rotateX: -80,
           opacity: 0,
-          filter: "blur(10px)",
           duration: 1.8,
           ease: "expo.out",
           stagger: 0.07,
