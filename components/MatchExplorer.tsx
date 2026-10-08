@@ -9,7 +9,9 @@ import { onReady } from "./Preloader";
 import { spotMatch } from "./MatchGrid";
 
 const COMP_CHIPS: Competition[] = ["Mundial", "Copa América", "Eliminatorias", "Amistoso"];
-const PAGE = 24;
+/** "El archivo": arranca con los últimos 10 y "Ver más" suma de a 25. */
+const FIRST = 10;
+const STEP = 25;
 
 const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
@@ -121,21 +123,24 @@ export function MatchExplorer() {
   const [comps, setComps] = useState<Set<Competition>>(new Set());
   const [withGoal, setWithGoal] = useState(false);
   const [finalsOnly, setFinalsOnly] = useState(false);
-  const [limit, setLimit] = useState(PAGE);
+  const [limit, setLimit] = useState(FIRST);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const filtering = q.trim() !== "" || year !== "all" || comps.size > 0 || withGoal || finalsOnly;
 
   const filtered = useMemo(() => {
     const nq = norm(q.trim());
-    return matches.filter(
-      (m) =>
-        (!nq || norm(m.opponent).includes(nq)) &&
-        (year === "all" || yearOf(m) === year) &&
-        (comps.size === 0 || comps.has(m.competition) || (comps.has("Copa América") && m.competition === "Finalissima")) &&
-        (!withGoal || m.goals > 0) &&
-        (!finalsOnly || m.isFinal),
-    );
+    // Del más reciente al más antiguo: se ordena acá, al renderizar, sin tocar los datos.
+    return matches
+      .filter(
+        (m) =>
+          (!nq || norm(m.opponent).includes(nq)) &&
+          (year === "all" || yearOf(m) === year) &&
+          (comps.size === 0 || comps.has(m.competition) || (comps.has("Copa América") && m.competition === "Finalissima")) &&
+          (!withGoal || m.goals > 0) &&
+          (!finalsOnly || m.isFinal),
+      )
+      .sort((a, b) => b.n - a.n);
   }, [q, year, comps, withGoal, finalsOnly]);
 
   // El grid de arriba resalta los cuadraditos que coinciden
@@ -143,11 +148,12 @@ export function MatchExplorer() {
     setHighlight(filtering ? new Set(filtered.map((m) => m.n)) : null);
   }, [filtered, filtering, setHighlight]);
 
-  // Deep link /p/[n]: expandir y llevar al explorador
+  // Partido abierto desde afuera (deep link /p/[n], click en el gráfico): expandir hasta incluirlo.
+  // El cambio de alto dispara el ScrollTrigger.refresh() del ResizeObserver de SmoothScroll.
   useEffect(() => {
     if (active == null) return;
     const idx = filtered.findIndex((m) => m.n === active);
-    if (idx >= limit) setLimit(idx + 6);
+    if (idx >= limit) setLimit(FIRST + Math.ceil((idx + 1 - FIRST) / STEP) * STEP);
   }, [active, filtered, limit]);
 
   useEffect(() => {
@@ -294,13 +300,18 @@ export function MatchExplorer() {
           })}
           </ul>
         </div>
-        {filtered.length > limit && (
+        {filtered.length > FIRST && (
           <button
             type="button"
-            onClick={() => setLimit((l) => l + 60)}
-            className="min-h-12 self-center rounded-full border border-bone/25 px-6 text-[13px] transition-colors hover:border-celeste"
+            onClick={() => {
+              if (filtered.length > limit) return setLimit((l) => l + STEP);
+              setActive(null); // si no, el partido abierto vuelve a expandir la lista
+              setLimit(FIRST);
+              scrollTo("#partidos", -20);
+            }}
+            className="min-h-12 self-center rounded-full border border-bone/25 px-6 font-mono text-[13px] transition-colors hover:border-celeste"
           >
-            Ver más ({filtered.length - limit})
+            {filtered.length > limit ? `Ver más (${filtered.length - limit})` : "Ver menos"}
           </button>
         )}
         {filtered.length === 0 && <p className="py-10 text-center font-serif text-2xl italic text-bone/60">Ningún partido con ese filtro. Probá otro rival.</p>}
