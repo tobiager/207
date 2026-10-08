@@ -6,6 +6,7 @@ import { useStore } from "@/lib/store";
 import { matchUrl, nativeShare, shareText } from "@/lib/share";
 import { Photo } from "./Photo";
 import { onReady } from "./Preloader";
+import { spotMatch } from "./MatchGrid";
 
 const COMP_CHIPS: Competition[] = ["Mundial", "Copa América", "Eliminatorias", "Amistoso"];
 const PAGE = 24;
@@ -25,11 +26,6 @@ function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; chi
       {children}
     </button>
   );
-}
-
-export function scrollToGridEnd(scrollTo: (t: string | HTMLElement, o?: number) => void) {
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  scrollTo("#grafico", reduce ? 0 : window.innerHeight * 2.3);
 }
 
 function outcome(m: Match) {
@@ -66,7 +62,6 @@ function ScoreCard({ m, gold }: { m: Match; gold: boolean }) {
 }
 
 function Detail({ m }: { m: Match }) {
-  const { setHighlight, setActive, scrollTo } = useStore();
   const [msg, setMsg] = useState<string | null>(null);
   const tone = m.isFinal && m.won ? "gold" : "celeste";
   return (
@@ -99,11 +94,7 @@ function Detail({ m }: { m: Match }) {
           </button>
           <button
             type="button"
-            onClick={() => {
-              setHighlight(new Set([m.n]));
-              setActive(m.n);
-              scrollToGridEnd(scrollTo);
-            }}
+            onClick={() => spotMatch(m.n)}
             className="min-h-11 rounded-full border border-bone/25 px-5 text-[13px] transition-colors hover:border-celeste"
           >
             Ver en el gráfico

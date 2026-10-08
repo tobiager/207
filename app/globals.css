@@ -188,6 +188,21 @@ body {
 .cell:hover, .cell:focus-visible, .cell[data-active="true"] { outline-color: var(--color-bone); }
 .match-grid[data-filtering="true"] .cell:not([data-hit="true"]) { filter: saturate(0) brightness(0.28); box-shadow: none; }
 .match-grid[data-filtering="true"] .cell[data-hit="true"] { outline-color: rgb(244 241 234 / 0.6); }
+/* "Ver en el gráfico": ring celeste + pulso corto (solo transform/opacity) */
+.cell[data-spot] { position: relative; z-index: 1; outline: 2px solid var(--color-celeste); outline-offset: 2px; filter: none !important; }
+.cell[data-spot]::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 2px solid var(--color-celeste);
+  border-radius: 6px;
+  opacity: 0;
+  animation: spot-ring 0.9s var(--ease-expo) 3;
+}
+@keyframes spot-ring {
+  from { transform: scale(0.8); opacity: 0.9; }
+  to { transform: scale(2.6); opacity: 0; }
+}
 
 /* ---------- Cursor ---------- */
 .cursor {
