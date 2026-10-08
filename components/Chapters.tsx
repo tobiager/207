@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { useLazyGSAP } from "@/lib/useLazyGSAP";
 import { chapters, matches } from "@/lib/matches";
-import { chapterImages } from "@/data/gallery";
+import { chapterImages, chapterVideos } from "@/data/gallery";
 import { Photo } from "./Photo";
+import { LoopVideo } from "./LoopVideo";
 
 const MINI_COLS = 27;
 const CELL = 8;
@@ -101,9 +102,11 @@ export function Chapters() {
           {chapters.map((c, i) => {
             const picked = new Set(matches.filter(c.pick).map((m) => m.n));
             const img = chapterImages[c.photo ?? c.year];
+            const videos = chapterVideos[c.title];
+            const num = `${String(i + 1).padStart(2, "0")} / ${String(chapters.length).padStart(2, "0")}`;
             return (
+              <Fragment key={c.title}>
               <article
-                key={c.title}
                 className="ch-panel relative h-[68svh] min-h-[460px] w-[86vw] flex-none overflow-hidden rounded-md md:h-[72vh] md:w-[78vw]"
                 aria-label={`${c.year}: ${c.title}`}
               >
@@ -112,7 +115,7 @@ export function Chapters() {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-night via-night/30 to-night/10" />
                 <span className="absolute left-4 top-4 font-mono text-[10px] uppercase tracking-[0.16em] text-bone/70 md:left-9 md:top-7 md:text-[11px]">
-                  Capítulo {String(i + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")} · {c.title}
+                  Capítulo {num} · {c.title}
                 </span>
                 <span className="absolute right-4 top-4 hidden font-mono text-[10px] text-bone/55 md:right-9 md:top-7 md:block">
                   {img?.credit ? `${img.credit} · ${img.license}` : ""}
@@ -135,6 +138,25 @@ export function Chapters() {
                   </div>
                 </div>
               </article>
+              {videos && (
+                <aside
+                  className="flex h-[68svh] min-h-[460px] flex-none flex-col gap-4 rounded-md border border-bone/10 bg-night-2/50 p-4 md:h-[72vh] md:gap-6 md:p-7"
+                  aria-label={`${c.title}, en video`}
+                >
+                  <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-bone/70 md:text-[11px]">
+                    Capítulo {num} · Lo que quedó
+                  </span>
+                  <div className="flex min-h-0 flex-1 gap-3 md:gap-6">
+                    {videos.map((v) => (
+                      <figure key={v.src} className="m-0 flex h-full flex-col gap-2.5">
+                        <LoopVideo src={v.src} poster={v.poster} label={v.label} className="aspect-[9/16] min-h-0 flex-1" />
+                        <figcaption className="max-w-[26ch] font-serif text-base italic leading-tight text-bone/80 md:text-xl">{v.label}</figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                </aside>
+              )}
+              </Fragment>
             );
           })}
         </div>
