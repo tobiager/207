@@ -1,6 +1,8 @@
 import { Experience } from "@/components/Experience";
 import { site } from "@/config/site";
 import { TOTAL_GOALS, TOTAL_MATCHES } from "@/lib/matches";
+import { getCommonsImages } from "@/lib/commons";
+import { ALL_COMMONS_FILES } from "@/data/lo-que-genero";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -21,11 +23,13 @@ const jsonLd = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  // Autor y licencia de las fotos de "Lo que generó", leídos de Commons en el build.
+  const media = await getCommonsImages(ALL_COMMONS_FILES);
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Experience />
+      <Experience media={media} />
     </>
   );
 }

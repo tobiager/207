@@ -5,7 +5,13 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: { "/*": ["./assets/og-fonts/**"] },
   images: {
     formats: ["image/avif", "image/webp"],
-    remotePatterns: [{ protocol: "https", hostname: "upload.wikimedia.org" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "upload.wikimedia.org" },
+      // Respaldo si la API de Commons no responde en el build: Special:FilePath redirige a upload.wikimedia.org
+      { protocol: "https", hostname: "commons.wikimedia.org", pathname: "/wiki/Special:FilePath/**" },
+      // Miniaturas de los videos de YouTube (se muestran sin optimizar)
+      { protocol: "https", hostname: "i.ytimg.com" },
+    ],
   },
 };
 

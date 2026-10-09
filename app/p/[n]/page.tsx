@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { Experience } from "@/components/Experience";
 import { matches, formatDate, TOTAL_MATCHES } from "@/lib/matches";
 import { site } from "@/config/site";
+import { getCommonsImages } from "@/lib/commons";
+import { ALL_COMMONS_FILES } from "@/data/lo-que-genero";
 
 type Props = { params: Promise<{ n: string }> };
 
@@ -30,5 +32,6 @@ export default async function MatchPage({ params }: Props) {
   const { n } = await params;
   const m = matches.find((x) => x.n === Number(n));
   if (!m) notFound();
-  return <Experience initialMatch={m.n} />;
+  const media = await getCommonsImages(ALL_COMMONS_FILES);
+  return <Experience initialMatch={m.n} media={media} />;
 }

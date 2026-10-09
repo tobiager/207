@@ -13,10 +13,12 @@ import { Chapters } from "./Chapters";
 import { Gallery } from "./Gallery";
 import { Finals } from "./Finals";
 import { Match208 } from "./Match208";
+import { LoQueGenero } from "./LoQueGenero";
+import type { CommonsMap } from "@/lib/commons";
 import { Outro } from "./Outro";
 import { Footer } from "./Footer";
 
-export function Experience({ initialMatch = null }: { initialMatch?: number | null }) {
+export function Experience({ initialMatch = null, media = {} }: { initialMatch?: number | null; media?: CommonsMap }) {
   return (
     <StoreProvider initialMatch={initialMatch}>
       <SmoothScroll />
@@ -31,6 +33,7 @@ export function Experience({ initialMatch = null }: { initialMatch?: number | nu
         <Chapters />
         <Gallery />
         <Finals />
+        <LoQueGenero media={media} />
         <Match208 />
         <Outro />
       </main>

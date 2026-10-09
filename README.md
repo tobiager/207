@@ -35,6 +35,7 @@ Variable opcional: `NEXT_PUBLIC_SITE_URL=https://208messi.vercel.app` (metadataB
 | Los 208 partidos | `data/matches.json` |
 | Fotos (autor, licencia, origen), galería, hero y capítulos | `data/gallery.ts` |
 | Textos de los capítulos | `lib/matches.ts` |
+| "Lo que generó": textos, fotos de Commons, videos y murales | `data/lo-que-genero.ts` |
 
 Rutas: `/` · `/p/[n]` (deep link a un partido) · `/story?m=176` (story vertical) · `/creditos` · `/?intro=0` saltea el preloader.
 
@@ -48,6 +49,20 @@ Los partidos 1 a 207 (fecha, rival, resultado, goles, competencia) se armaron cr
 Validación: 207 partidos y 125 goles hasta la final del Mundial 2026; el número de cap y los goles de cada uno de los 86 partidos con gol coinciden entre ambas fuentes. Cada partido tiene `"verified"` en el JSON (`false` = no se pudo cruzar con dos fuentes). Las fechas son locales del estadio.
 
 El partido 208 (3-0 a Benín, goles de Otamendi, Nico Paz y Messi de penal) se cargó con las crónicas del 6 y 7 de octubre de 2026. Los medios no coinciden del todo en los minutos; se usó el que repite la mayoría (48', 62' y 71').
+
+## Lo que generó
+
+Sección `// 07`, entre Las finales y el Partido 208: lo que Messi provocó en la gente. Va de lo masivo a lo personal:
+
+1. **El gráfico se rompe**: los 208 cuadraditos se desarman en miles hasta llenar la pantalla (canvas + ScrollTrigger).
+2. **18D · Los livings**: reacciones al penal de Montiel en casas, bares y plazas.
+3. **20D · La calle**: contador hasta 5.000.000, fotos de los festejos y la caravana.
+4. **Las paredes**: índice de murales con su ciudad, artista y fuente; cada uno se despliega con su video o sus fotos.
+5. **La 10**: un mosaico de fotos de hinchas que, al alejarse, forma el número 10 sobre la grilla del gráfico.
+6. **Tu vida con él**: con tu año (y mes) de nacimiento, qué edad tenías en cada momento y qué parte de tu vida lo viste con la celeste. Se calcula en el navegador.
+7. **Puente al 208**: “Y el 6 de octubre, le tocó a él escucharnos.”
+
+Fotos: solo archivos de Wikimedia Commons. El autor y la licencia se leen de la API de Commons en el build (`lib/commons.ts`, revalidado cada 24 h), así el crédito siempre coincide con el archivo; si un archivo se borra de Commons, deja de mostrarse. Videos: posts públicos de YouTube con el reproductor oficial (`youtube-nocookie`), que se carga recién al tocar; el canal queda visible en cada video y en `/creditos`.
 
 ## Créditos de fotos
 

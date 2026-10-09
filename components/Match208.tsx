@@ -172,6 +172,7 @@ export function Match208() {
     gsap.utils.toArray<HTMLElement>(".lm-photo").forEach((el) => {
       gsap.from(el, { y: 60, opacity: 0, duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } });
     });
+    gsap.from(".lm-last", { y: 30, opacity: 0, duration: 1.6, ease: "expo.out", scrollTrigger: { trigger: ".lm-last", start: "top 85%" } });
     gsap.from(".lm-goal", { y: 18, opacity: 0, duration: 1, ease: "expo.out", stagger: 0.12, scrollTrigger: { trigger: ".lm-goals", start: "top 85%" } });
   }, root);
 
@@ -183,7 +184,7 @@ export function Match208() {
       aria-labelledby="p208-title"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgb(117_170_219/0.16),transparent_55%)]" />
-      <span className="eyebrow relative">// 07 — Partido {m.n} · La despedida</span>
+      <span className="eyebrow relative">// 08 — Partido {m.n} · La despedida</span>
 
       <div className="lm-square relative flex h-36 w-36 items-center justify-center rounded-2xl bg-celeste font-display text-6xl font-black text-night shadow-[0_0_100px_rgb(117_170_219/0.6)] md:h-[220px] md:w-[220px] md:text-[84px]">
         <span className="flex flex-col items-center leading-none">
@@ -272,6 +273,10 @@ export function Match208() {
       <div className="relative w-full max-w-[1344px]">
         <Quote />
       </div>
+
+      <p className="lm-last relative mt-8 max-w-[900px] text-balance font-serif text-[34px] italic leading-[1.02] text-bone/85 md:mt-16 md:text-[60px]">
+        Gracias por hacernos <span className="text-celeste">creer de nuevo.</span>
+      </p>
     </section>
   );
 }

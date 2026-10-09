@@ -281,6 +281,22 @@ html.has-cursor .cursor { display: block; }
 .caret { animation: blink 1s steps(1) infinite; }
 .outline-text { color: transparent; -webkit-text-stroke: 1px rgb(117 170 219 / 0.2); }
 
+/* ---------- Lo que generó ---------- */
+/* Mosaico de la 10: tamaño de cada cuadradito según el ancho disponible (16 columnas). */
+.ten { --tg: 3px; --t: min(30px, calc((100vw - 2 * var(--gutter) - 45px) / 16)); }
+@media (min-width: 768px) {
+  .ten { --tg: 5px; --t: min(44px, calc((100vw - 2 * var(--gutter) - 460px - 80px - 75px) / 16)); }
+}
+/* Al final del zoom, las fotos del 10 se encienden sobre el gráfico apagado. */
+.ten-grid { --glow: 1; }
+.ten-tile { box-shadow: 0 0 calc(var(--glow) * 18px) rgb(117 170 219 / calc(var(--glow) * 0.45)), inset 0 0 0 1px rgb(117 170 219 / 0.35); }
+.ten-tile img { filter: grayscale(1) contrast(1.15) brightness(calc(1.05 + var(--glow) * 0.25)) !important; }
+.ten-tile.is-color img { filter: none !important; }
+/* Panel desplegable de cada pared (alto animado con grid-template-rows). */
+.wall-panel { grid-template-rows: 0fr; transition: grid-template-rows 0.7s var(--ease-expo); }
+.wall-panel[data-open] { grid-template-rows: 1fr; }
+.yt-card iframe { color-scheme: light; }
+
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
